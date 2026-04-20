@@ -3,9 +3,7 @@
 use App\Http\Controllers\Auth\SocialAuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::redirect('/', '/app')->name('home');
 
 Route::view('/no-auth', 'no-auth')->name('auth.no-access');
 

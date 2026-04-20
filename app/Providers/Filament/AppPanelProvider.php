@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\App\Widgets\InfoInstansi;
+use App\Filament\Pages\Auth\AppLogin;
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -11,7 +14,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -26,8 +28,9 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->id('app')
             ->path('app')
+            ->login(AppLogin::class)
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Sky,
             ])
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\Filament\App\Resources')
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\Filament\App\Pages')
@@ -36,8 +39,8 @@ class AppPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\Filament\App\Widgets')
             ->widgets([
+                InfoInstansi::class,
                 AccountWidget::class,
-                FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -50,6 +53,8 @@ class AppPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->defaultThemeMode(ThemeMode::Light)
+            ->topNavigation()
             ->authMiddleware([
                 Authenticate::class,
             ]);

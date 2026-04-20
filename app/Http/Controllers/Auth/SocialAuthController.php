@@ -17,7 +17,7 @@ class SocialAuthController extends Controller
     {
         $this->ensureProviderIsAllowed($provider);
 
-        return Socialite::driver($provider)->redirect();
+        return Socialite::driver($provider)->with(['prompt' => 'select_account'])->redirect();
     }
 
     public function callback(Request $request, string $provider): RedirectResponse

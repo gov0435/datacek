@@ -53,7 +53,6 @@ class PotensiPpgsTable
                     ->options(Jenjang::class),
                 SelectFilter::make('kota')
                     ->label('Kota')
-                    ->searchable()
                     ->options(KabKota::class),
                 TernaryFilter::make('is_check')
                     ->label('Dicek')

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Whitelists\Schemas;
 
+use App\Enums\KabKota;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -29,6 +31,10 @@ class WhitelistForm
                             ->label('Instansi')
                             ->required()
                             ->maxLength(255),
+                        Select::make('kabkota')
+                            ->label('Kabupaten/Kota')
+                            ->options(KabKota::class)
+                            ->required(),
                     ])
                     ->columns(1),
             ]);

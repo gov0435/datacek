@@ -27,6 +27,10 @@ class WhitelistsTable
                     ->label('Instansi')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('kabkota')
+                    ->label('Kab/Kota')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y H:i')

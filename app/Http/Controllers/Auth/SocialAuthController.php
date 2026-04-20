@@ -61,6 +61,7 @@ class SocialAuthController extends Controller
             'name' => $socialiteUser->getName() ?? $whitelist->nama,
             'email' => $email,
             'instansi' => $whitelist->instansi,
+            'kabkota' => $whitelist->kabkota,
             'provider' => strtolower($provider),
             'provider_id' => $providerId === null ? null : (string) $providerId,
             'avatar' => $socialiteUser->getAvatar(),

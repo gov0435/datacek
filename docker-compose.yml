@@ -1,0 +1,107 @@
+# =============================================================================
+# Docker Compose — Production (Coolify)
+# Stack: Laravel 13 + PHP 8.4 + PostgreSQL (Neon, eksternal)
+#
+# CATATAN COOLIFY:
+#   - Network "coolify" dideklarasikan external → Coolify yang manage
+#   - Docs 504: https://coolify.io/docs/troubleshoot/applications/gateway-timeout
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # WEB — Laravel App
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: ppg26-app
+    ports:
+      - '${APP_PORT:-8829}:8080'
+    environment:
+      # --- App ---
+      APP_NAME: ${APP_NAME}
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_KEY: ${APP_KEY}
+      APP_URL: ${APP_URL}
+      TZ: Asia/Makassar
+
+      # --- PHP ---
+      PHP_OPCACHE_ENABLE: '1'
+      PHP_OPCACHE_VALIDATE_TIMESTAMPS: '0'
+      PHP_MEMORY_LIMIT: '512M'
+      PHP_MAX_EXECUTION_TIME: ${PHP_MAX_EXECUTION_TIME:-300}
+      PHP_MAX_INPUT_TIME: ${PHP_MAX_INPUT_TIME:-300}
+      PHP_POST_MAX_SIZE: '100M'
+      PHP_UPLOAD_MAX_FILE_SIZE: '100M'
+
+      # --- Queue, Cache, Session (database driver) ---
+      QUEUE_CONNECTION: database
+      CACHE_STORE: database
+      SESSION_DRIVER: database
+      SESSION_COOKIE: ${SESSION_COOKIE:-ppg26}
+      SESSION_DOMAIN: ${SESSION_DOMAIN}
+      SESSION_SECURE_COOKIE: ${SESSION_SECURE_COOKIE:-true}
+      SESSION_SAME_SITE: ${SESSION_SAME_SITE:-lax}
+
+      # --- DB Primary (PostgreSQL / Neon) ---
+      DB_CONNECTION: ${DB_CONNECTION:-pgsql}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # --- Google OAuth ---
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI}
+
+      # --- Autorun (hanya di web service) ---
+      AUTORUN_ENABLED: 'true'
+      AUTORUN_LARAVEL_STORAGE_LINK: 'true'
+      AUTORUN_LARAVEL_MIGRATION: 'false'
+      AUTORUN_LARAVEL_MIGRATION_ISOLATION: 'false'
+      AUTORUN_LARAVEL_OPTIMIZE: 'true'
+      AUTORUN_LARAVEL_CONFIG_CACHE: 'true'
+      AUTORUN_LARAVEL_EVENT_CACHE: 'true'
+      AUTORUN_LARAVEL_ROUTE_CACHE: 'true'
+      AUTORUN_LARAVEL_VIEW_CACHE: 'true'
+
+      # --- NGINX / FPM tuning ---
+      PHP_FPM_PM_CONTROL: 'static'
+      PHP_FPM_PM_MAX_CHILDREN: '15'
+      NGINX_CLIENT_MAX_BODY_SIZE: '100M'
+      NGINX_FASTCGI_BUFFERS: '32 32k'
+      NGINX_FASTCGI_READ_TIMEOUT: ${NGINX_FASTCGI_READ_TIMEOUT:-305s}
+      NGINX_PROXY_READ_TIMEOUT: ${NGINX_PROXY_READ_TIMEOUT:-305s}
+      TRUSTED_PROXIES: '*'
+    volumes:
+      - storage-data:/var/www/html/storage/app
+      - logs-data:/var/www/html/storage/logs
+    networks:
+      - coolify
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/healthcheck']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  coolify:
+    external: true
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  storage-data:
+  logs-data:

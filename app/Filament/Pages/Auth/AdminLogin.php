@@ -22,7 +22,7 @@ class AdminLogin extends BaseLogin
     {
         return Action::make('googleLogin')
             ->label('Login dengan Google')
-            ->url(route('auth.social.redirect', ['provider' => 'google']))
-            ->color('gray');
+            ->color('gray')
+            ->action(fn () => $this->redirect(route('auth.social.redirect', ['provider' => 'google'])));
     }
 }

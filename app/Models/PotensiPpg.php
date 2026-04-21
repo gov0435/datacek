@@ -28,6 +28,7 @@ class PotensiPpg extends Model
             'nuptk' => 'float',
             'nip' => 'float',
             'is_check' => 'boolean',
+            'is_serdik' => 'boolean',
             'jenjang' => Jenjang::class,
             'status_daftar' => StatusDaftar::class,
         ];

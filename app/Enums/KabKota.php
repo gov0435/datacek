@@ -13,6 +13,7 @@ enum KabKota: string implements HasLabel
     case KabGorontaloUtara = 'Kab. Gorontalo Utara';
     case KabPohuwato = 'Kab. Pohuwato';
     case KotaGorontalo = 'Kota Gorontalo';
+    case Provinsi = 'Provinsi';
 
     public function getLabel(): string|Htmlable|null
     {

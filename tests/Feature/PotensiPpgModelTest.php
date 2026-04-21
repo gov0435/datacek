@@ -18,6 +18,7 @@ beforeEach(function () {
         $table->float('nuptk')->nullable();
         $table->float('nip')->nullable();
         $table->boolean('is_check')->nullable()->default(false);
+        $table->boolean('is_serdik')->default(false);
     });
 });
 
@@ -50,6 +51,7 @@ test('potensi ppg model applies configured casts', function () {
         'nuptk' => 9876543210,
         'nip' => 198903132020012002,
         'is_check' => true,
+        'is_serdik' => true,
     ]);
 
     $record = PotensiPpg::query()->findOrFail(120002);
@@ -58,5 +60,17 @@ test('potensi ppg model applies configured casts', function () {
         ->and($record->tahun)->toBeInt()
         ->and($record->nik)->toBeInt()
         ->and($record->gelombang)->toBeFloat()
-        ->and($record->is_check)->toBeBool();
+        ->and($record->is_check)->toBeBool()
+        ->and($record->is_serdik)->toBeBool();
+});
+
+test('potensi ppg sets is_serdik default to false', function () {
+    DB::table('ppg')->insert([
+        'ptk_id' => 120003,
+        'nama' => 'Andi Pratama',
+    ]);
+
+    $record = PotensiPpg::query()->findOrFail(120003);
+
+    expect($record->is_serdik)->toBeFalse();
 });

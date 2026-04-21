@@ -9,6 +9,8 @@ class ListDataPotensis extends ListRecords
 {
     protected static string $resource = DataPotensiResource::class;
 
+    protected static ?string $title = 'Data Potensi';
+
     protected function getHeaderActions(): array
     {
         return [];

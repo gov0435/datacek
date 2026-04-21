@@ -25,7 +25,7 @@ class DataPotensiResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'Data Potensi';
+    protected static ?string $navigationLabel = 'Data Potensi';
 
     public static function table(Table $table): Table
     {

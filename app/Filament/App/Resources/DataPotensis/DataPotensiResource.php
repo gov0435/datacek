@@ -98,6 +98,11 @@ class DataPotensiResource extends Resource
         return self::JENJANG_KAB_KOTA;
     }
 
+    public static function getWhitelistKabKotaHeading(): string
+    {
+        return static::getAuthenticatedWhitelistKabKota() ?? 'Kabkota';
+    }
+
     private static function getAuthenticatedWhitelistKabKota(): ?string
     {
         $whitelist = static::getAuthenticatedWhitelist();

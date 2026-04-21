@@ -1,6 +1,7 @@
 <?php
 
 use App\Filament\App\Resources\DataPotensis\DataPotensiResource;
+use App\Filament\App\Resources\DataPotensis\Tables\DataPotensisTable;
 use App\Models\User;
 use App\Models\Whitelist;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,6 +15,9 @@ beforeEach(function () {
     Schema::create('ppg', function (Blueprint $table): void {
         $table->unsignedBigInteger('ptk_id')->primary();
         $table->string('nama')->nullable();
+        $table->bigInteger('nik')->nullable();
+        $table->string('npsn')->nullable();
+        $table->string('sta_asn')->nullable();
         $table->string('kota')->nullable();
         $table->string('jenjang')->nullable();
         $table->string('status_daftar')->nullable();
@@ -89,7 +93,9 @@ test('resource query returns empty data when user has no whitelist', function ()
 
     $this->actingAs($user);
 
-    expect(DataPotensiResource::getEloquentQuery()->count())->toBe(0);
+    expect(DataPotensiResource::getEloquentQuery()->count())
+        ->toBe(0)
+        ->and(DataPotensiResource::getWhitelistKabKotaHeading())->toBe('Kabkota');
 });
 
 test('kabkota table filter options follow user whitelist kabkota', function () {
@@ -108,7 +114,8 @@ test('kabkota table filter options follow user whitelist kabkota', function () {
     $this->actingAs($user);
 
     expect(DataPotensiResource::getKabKotaFilterOptions())
-        ->toBe(['Kab. Pohuwato' => 'Kab. Pohuwato']);
+        ->toBe(['Kab. Pohuwato' => 'Kab. Pohuwato'])
+        ->and(DataPotensiResource::getWhitelistKabKotaHeading())->toBe('Kab. Pohuwato');
 });
 
 test('jenjang filter options for kabkota scope are limited to paud sd smp', function () {
@@ -234,4 +241,46 @@ test('provinsi scope is detected from whitelist kabkota value', function () {
 
     expect(DataPotensiResource::getEloquentQuery()->pluck('ptk_id')->all())
         ->toBe([40]);
+});
+
+test('export csv returns streamed csv file without queue', function () {
+    $user = User::factory()->create([
+        'email' => 'export@example.com',
+    ]);
+
+    Whitelist::query()->create([
+        'email' => 'export@example.com',
+        'nama' => 'Export User',
+        'instansi' => 'Dinas Pendidikan Kota',
+        'kabkota' => 'Kota Gorontalo',
+    ]);
+
+    DB::table('ppg')->insert([
+        'ptk_id' => 50,
+        'nama' => 'Guru Export',
+        'nik' => 3201001001000050,
+        'npsn' => '12345678',
+        'sta_asn' => 'ASN',
+        'jenjang' => 'SD',
+        'kota' => 'Kota Gorontalo',
+        'status_daftar' => 'Belum Daftar',
+        'is_check' => false,
+        'is_serdik' => false,
+    ]);
+
+    $this->actingAs($user);
+
+    $response = DataPotensisTable::exportCsvResponse();
+
+    ob_start();
+    $response->sendContent();
+    $content = (string) ob_get_clean();
+
+    expect($response->headers->get('content-type'))->toContain('text/csv')
+        ->and($response->headers->get('content-disposition'))->toContain('attachment;')
+        ->and($content)->toContain('"SIMPKB ID",Nama,NPSN,"Status ASN",Jenjang,Kota')
+        ->and($content)->toContain('50,"Guru Export"')
+        ->and($content)->toContain(',12345678,ASN,SD,')
+        ->and($content)->not->toContain('3201001001000050')
+        ->and($content)->toContain('Kota Gorontalo');
 });

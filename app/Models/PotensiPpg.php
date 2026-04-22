@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Jenjang;
 use App\Enums\StatusDaftar;
+use App\Enums\StatusPPG;
 use Illuminate\Database\Eloquent\Model;
 
 class PotensiPpg extends Model
@@ -18,6 +19,11 @@ class PotensiPpg extends Model
 
     protected $keyType = 'int';
 
+    protected $fillable = [
+        'is_serdik',
+        'statusppg',
+    ];
+
     protected function casts(): array
     {
         return [
@@ -31,6 +37,7 @@ class PotensiPpg extends Model
             'is_serdik' => 'boolean',
             'jenjang' => Jenjang::class,
             'status_daftar' => StatusDaftar::class,
+            'statusppg' => StatusPPG::class,
         ];
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Filament\App\Resources\DataPotensis\Tables;
 
+use App\Enums\StatusPPG;
 use App\Filament\App\Resources\DataPotensis\DataPotensiResource;
 use Filament\Actions\Action;
+use Filament\Notifications\Notification;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -44,6 +47,20 @@ class DataPotensisTable
                 TextColumn::make('kota')
                     ->label('Kota')
                     ->searchable(),
+                SelectColumn::make('statusppg')
+                    ->label('Check Dinas')
+                    ->options(StatusPPG::class)
+                    ->afterStateUpdated(function ($record, $state) {
+                        $statusLabel = $record->statusppg instanceof StatusPPG
+                            ? $record->statusppg->getLabel()
+                            : $state;
+
+                        Notification::make()
+                            ->title('Status berhasil diperbarui')
+                            ->body("Status PPG untuk {$record->nama} diubah menjadi {$statusLabel}")
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->headerActions([
                 Action::make('exportCsv')
@@ -59,6 +76,9 @@ class DataPotensisTable
                     ->label('Kota')
                     ->options(DataPotensiResource::getKabKotaFilterOptions())
                     ->visible(fn (): bool => ! DataPotensiResource::isProvinsiScope()),
+                SelectFilter::make('statusppg')
+                    ->label('Status PPG')
+                    ->options(StatusPPG::class),
             ])
             ->defaultSort('nama')
             ->recordActions([])
@@ -76,10 +96,10 @@ class DataPotensisTable
                 return;
             }
 
-            fputcsv($handle, ['SIMPKB ID', 'Nama', 'NPSN', 'Status ASN', 'Jenjang', 'Kota']);
+            fputcsv($handle, ['SIMPKB ID', 'Nama', 'NPSN', 'Status ASN', 'Jenjang', 'Kota', 'Status PPG']);
 
             DataPotensiResource::getEloquentQuery()
-                ->select(['ptk_id', 'nama', 'npsn', 'sta_asn', 'jenjang', 'kota'])
+                ->select(['ptk_id', 'nama', 'npsn', 'sta_asn', 'jenjang', 'kota', 'statusppg'])
                 ->orderBy('nama')
                 ->cursor()
                 ->each(function ($record) use ($handle): void {
@@ -90,6 +110,7 @@ class DataPotensisTable
                         $record->sta_asn,
                         $record->jenjang?->value ?? $record->jenjang,
                         $record->kota,
+                        $record->statusppg?->getLabel() ?? $record->statusppg,
                     ]);
                 });
 

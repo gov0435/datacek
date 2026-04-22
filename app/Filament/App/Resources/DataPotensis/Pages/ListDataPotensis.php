@@ -3,6 +3,7 @@
 namespace App\Filament\App\Resources\DataPotensis\Pages;
 
 use App\Filament\App\Resources\DataPotensis\DataPotensiResource;
+use App\Filament\Widgets\StatusPPGDistribution;
 use Filament\Resources\Pages\ListRecords;
 
 class ListDataPotensis extends ListRecords
@@ -14,5 +15,12 @@ class ListDataPotensis extends ListRecords
     protected function getHeaderActions(): array
     {
         return [];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            StatusPPGDistribution::class,
+        ];
     }
 }

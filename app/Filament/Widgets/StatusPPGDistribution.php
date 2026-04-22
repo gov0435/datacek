@@ -12,15 +12,28 @@ use Illuminate\Support\Facades\Auth;
 
 class StatusPPGDistribution extends BaseWidget
 {
+    private const JENJANG_KAB_KOTA = ['PAUD', 'SD', 'SMP'];
+
+    private const JENJANG_PROVINSI = ['SLB', 'SMA', 'SMK'];
+
     protected function getStats(): array
     {
         $query = PotensiPpg::query();
 
-        // Filter by kabkota dari whitelist user yang login
-        $kabKota = $this->getAuthenticatedWhitelistKabKota();
+        // Check if user is provinsi scope
+        if ($this->isProvinsiScope()) {
+            // Filter by jenjang provinsi
+            $query->whereIn('jenjang', self::JENJANG_PROVINSI);
+        } else {
+            // Filter by jenjang kab/kota
+            $query->whereIn('jenjang', self::JENJANG_KAB_KOTA);
 
-        if ($kabKota !== null) {
-            $query->where('kota', $kabKota);
+            // Filter by kabkota dari whitelist user yang login
+            $kabKota = $this->getAuthenticatedWhitelistKabKota();
+
+            if ($kabKota !== null) {
+                $query->where('kota', $kabKota);
+            }
         }
 
         // Single query to get all counts
@@ -49,6 +62,19 @@ class StatusPPGDistribution extends BaseWidget
         }
 
         return $stats;
+    }
+
+    private function isProvinsiScope(): bool
+    {
+        $kabKota = $this->getAuthenticatedWhitelistKabKota();
+
+        if (is_string($kabKota) && str_contains(strtolower($kabKota), 'provinsi')) {
+            return true;
+        }
+
+        $scopeLabel = $this->getScopeLabelForAuthenticatedUser();
+
+        return $scopeLabel !== null && str_contains(strtolower($scopeLabel), 'provinsi');
     }
 
     private function getAuthenticatedWhitelistKabKota(): ?string
@@ -90,5 +116,18 @@ class StatusPPGDistribution extends BaseWidget
         return Whitelist::query()
             ->whereRaw('LOWER(email) = ?', [strtolower((string) $user->email)])
             ->first();
+    }
+
+    private function getScopeLabelForAuthenticatedUser(): ?string
+    {
+        $whitelist = $this->getAuthenticatedWhitelist();
+
+        $whitelistScope = $whitelist?->instansi;
+
+        if (is_string($whitelistScope) && $whitelistScope !== '') {
+            return $whitelistScope;
+        }
+
+        return null;
     }
 }

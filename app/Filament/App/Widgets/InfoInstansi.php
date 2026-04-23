@@ -10,8 +10,6 @@ class InfoInstansi extends Widget
 {
     protected static bool $isLazy = false;
 
-    protected static ?int $sort = -2;
-
     protected string $view = 'filament.app.widgets.info-instansi';
 
     protected function getViewData(): array

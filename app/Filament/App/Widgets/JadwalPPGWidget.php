@@ -8,7 +8,7 @@ class JadwalPPGWidget extends Widget
 {
     protected static bool $isLazy = false;
 
-    protected static ?int $sort = -1;
+    protected static ?int $sort = 2;
 
     /**
      * @var string|int|array<string, string|int|null>

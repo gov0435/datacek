@@ -2,6 +2,8 @@
 
 namespace App\Filament\App\Resources\DataPotensis\Tables;
 
+use App\Enums\LayakDaftar;
+use App\Enums\StatusDaftar;
 use App\Enums\StatusPPG;
 use App\Filament\App\Resources\DataPotensis\DataPotensiResource;
 use Filament\Actions\Action;
@@ -24,25 +26,25 @@ class DataPotensisTable
             ->columns([
                 TextColumn::make('ptk_id')
                     ->label('SIMPKB ID')
+                    ->description(fn ($record): ?string => filled($record->npsn) ? "NPSN: {$record->npsn}" : null)
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('nama')
                     ->label('Nama')
+                    ->description(fn ($record): ?string => filled($record->nik) ? "NIK: {$record->nik}" : null)
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('nik')
-                    ->label('NIK')
-                    ->searchable(),
-                TextColumn::make('npsn')
-                    ->label('NPSN')
-                    ->searchable()
-                    ->url(fn ($record): ?string => filled($record->npsn) ? "https://referensi.data.kemendikdasmen.go.id/pendidikan/npsn/{$record->npsn}" : null)
-                    ->openUrlInNewTab(),
                 TextColumn::make('sta_asn')
                     ->label('Status ASN')
                     ->badge(),
                 TextColumn::make('jenjang')
                     ->label('Jenjang')
+                    ->badge(),
+                TextColumn::make('layak_daftar')
+                    ->label('Kelayakan')
+                    ->badge(),
+                TextColumn::make('status_daftar')
+                    ->label('Status Daftar')
                     ->badge(),
                 TextColumn::make('kota')
                     ->label('Kota')
@@ -79,6 +81,12 @@ class DataPotensisTable
                 SelectFilter::make('statusppg')
                     ->label('Status PPG')
                     ->options(StatusPPG::class),
+                SelectFilter::make('layak_daftar')
+                    ->label('Kelayakan')
+                    ->options(LayakDaftar::class),
+                SelectFilter::make('status_daftar')
+                    ->label('Status Daftar')
+                    ->options(StatusDaftar::class),
             ])
             ->defaultSort('nama')
             ->recordActions([])
@@ -96,10 +104,10 @@ class DataPotensisTable
                 return;
             }
 
-            fputcsv($handle, ['SIMPKB ID', 'Nama', 'NPSN', 'Status ASN', 'Jenjang', 'Kota', 'Status PPG']);
+            fputcsv($handle, ['SIMPKB ID', 'Nama', 'NPSN', 'Status ASN', 'Jenjang', 'Kota', 'Status PPG', 'Layak Daftar', 'Status Daftar']);
 
             DataPotensiResource::getEloquentQuery()
-                ->select(['ptk_id', 'nama', 'npsn', 'sta_asn', 'jenjang', 'kota', 'statusppg'])
+                ->select(['ptk_id', 'nama', 'npsn', 'sta_asn', 'jenjang', 'kota', 'statusppg', 'layak_daftar', 'status_daftar'])
                 ->orderBy('nama')
                 ->cursor()
                 ->each(function ($record) use ($handle): void {
@@ -111,6 +119,8 @@ class DataPotensisTable
                         $record->jenjang?->value ?? $record->jenjang,
                         $record->kota,
                         $record->statusppg?->getLabel() ?? $record->statusppg,
+                        $record->layak_daftar?->value ?? $record->layak_daftar,
+                        $record->status_daftar?->value ?? $record->status_daftar,
                     ]);
                 });
 

@@ -52,7 +52,7 @@ class StatusPPGDistribution extends BaseWidget
                 $notEligibleCount += $counts[$status->value] ?? 0;
             }
         }
-        $stats[] = Stat::make('Meninggal, Pensiun, Bukan Guru', $notEligibleCount)
+        $stats[] = Stat::make('Meninggal, Pensiun, Bukan Guru, Tidak AKtif', $notEligibleCount)
             ->color('danger');
 
         // Count remaining statuses

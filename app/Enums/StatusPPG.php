@@ -37,4 +37,12 @@ enum StatusPPG: string implements HasColor, HasLabel
             self::BelumSerdik => 'warning',
         };
     }
+
+    public function isNotEligible(): bool
+    {
+        return match ($this) {
+            self::BukanGuru, self::Pensiun, self::Meninggal => true,
+            default => false,
+        };
+    }
 }

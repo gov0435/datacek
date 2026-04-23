@@ -45,17 +45,30 @@ class StatusPPGDistribution extends BaseWidget
 
         $stats = [];
 
-        // Count each enum status
+        // Merge BukanGuru, Pensiun, Meninggal into "Tidak Layak"
+        $notEligibleCount = 0;
         foreach (StatusPPG::cases() as $status) {
-            $count = $counts[$status->value] ?? 0;
+            if ($status->isNotEligible()) {
+                $notEligibleCount += $counts[$status->value] ?? 0;
+            }
+        }
+        $stats[] = Stat::make('Meninggal, Pensiun, Bukan Guru', $notEligibleCount)
+            ->color('danger');
 
+        // Count remaining statuses
+        $eligibleStatuses = [
+            StatusPPG::BelumS1,
+            StatusPPG::SudahSerdik,
+            StatusPPG::BelumSerdik,
+        ];
+        foreach ($eligibleStatuses as $status) {
+            $count = $counts[$status->value] ?? 0;
             $stats[] = Stat::make($status->getLabel(), $count)
                 ->color($status->getColor());
         }
 
         // Count null/Tidak Diisi
         $nullCount = $counts[null] ?? 0;
-
         if ($nullCount > 0) {
             $stats[] = Stat::make('Tidak Diisi', $nullCount)
                 ->color('gray');

@@ -12,11 +12,13 @@ enum StatusPPG: string implements HasColor, HasLabel
     case Meninggal = 'meninggal';
     case Pensiun = 'pensiun';
     case SudahSerdik = 'sudah_serdik';
+    case SementaraSerdik = 'sementara_serdik';
     case BelumSerdik = 'belum_serdik';
 
     public function getLabel(): string
     {
         return match ($this) {
+            self::SementaraSerdik => 'Sementara Serdik',
             self::BelumS1 => 'Belum S1',
             self::BukanGuru => 'Bukan Guru',
             self::Meninggal => 'Meninggal',
@@ -29,6 +31,7 @@ enum StatusPPG: string implements HasColor, HasLabel
     public function getColor(): ?string
     {
         return match ($this) {
+            self::SementaraSerdik => 'info',
             self::BelumS1 => 'gray',
             self::BukanGuru => 'danger',
             self::Meninggal => 'danger',

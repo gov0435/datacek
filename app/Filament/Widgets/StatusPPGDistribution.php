@@ -59,6 +59,7 @@ class StatusPPGDistribution extends BaseWidget
         $eligibleStatuses = [
             StatusPPG::BelumS1,
             StatusPPG::SudahSerdik,
+            StatusPPG::SementaraSerdik,
             StatusPPG::BelumSerdik,
         ];
         foreach ($eligibleStatuses as $status) {

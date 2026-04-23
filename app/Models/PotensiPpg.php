@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Jenjang;
+use App\Enums\LayakDaftar;
 use App\Enums\StatusDaftar;
 use App\Enums\StatusPPG;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,7 @@ class PotensiPpg extends Model
             'is_check' => 'boolean',
             'is_serdik' => 'boolean',
             'jenjang' => Jenjang::class,
+            'layak_daftar' => LayakDaftar::class,
             'status_daftar' => StatusDaftar::class,
             'statusppg' => StatusPPG::class,
         ];

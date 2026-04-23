@@ -4,6 +4,8 @@ namespace App\Filament\Resources\PotensiPpgs\Tables;
 
 use App\Enums\Jenjang;
 use App\Enums\KabKota;
+use App\Enums\LayakDaftar;
+use App\Enums\StatusDaftar;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -39,6 +41,9 @@ class PotensiPpgsTable
                 TextColumn::make('status_ajuan')
                     ->label('Status Ajuan')
                     ->badge(),
+                TextColumn::make('layak_daftar')
+                    ->label('Layak Daftar')
+                    ->badge(),
                 TextColumn::make('status_daftar')
                     ->label('Status Daftar')
                     ->badge(),
@@ -54,6 +59,12 @@ class PotensiPpgsTable
                 SelectFilter::make('kota')
                     ->label('Kota')
                     ->options(KabKota::class),
+                SelectFilter::make('layak_daftar')
+                    ->label('Layak Daftar')
+                    ->options(LayakDaftar::class),
+                SelectFilter::make('status_daftar')
+                    ->label('Status Daftar')
+                    ->options(StatusDaftar::class),
                 TernaryFilter::make('is_check')
                     ->label('Dicek')
                     ->trueLabel('Sudah')

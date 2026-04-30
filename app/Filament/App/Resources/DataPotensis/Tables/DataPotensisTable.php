@@ -80,7 +80,23 @@ class DataPotensisTable
                     ->visible(fn (): bool => ! DataPotensiResource::isProvinsiScope()),
                 SelectFilter::make('statusppg')
                     ->label('Status PPG')
-                    ->options(StatusPPG::class),
+                    ->options([
+                        'potensi' => 'Potensi',
+                        ...collect(StatusPPG::cases())->mapWithKeys(fn (StatusPPG $status): array => [$status->value => $status->getLabel()])->all(),
+                    ])
+                    ->query(function ($query, array $data) {
+                        $value = $data['value'] ?? null;
+
+                        if ($value === null || $value === '') {
+                            return $query;
+                        }
+
+                        if ($value === 'potensi') {
+                            return $query->whereNull('statusppg');
+                        }
+
+                        return $query->where('statusppg', $value);
+                    }),
                 SelectFilter::make('layak_daftar')
                     ->label('Kelayakan')
                     ->options(LayakDaftar::class),

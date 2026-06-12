@@ -1,0 +1,14 @@
+curl ^"https://ppg-backend.simpkb.id/i/801055/ppgdj-mahasiswa/keberminatan?keyword=^&page=1^&limit=10^&gelombang=2^&tahun=2026^" ^
+  -H ^"accept: application/json, text/plain, */*^" ^
+  -H ^"accept-language: en-US,en;q=0.9^" ^
+  -b ^"_ga_F94CCFR0FD=GS2.1.s1760596012^$o2^$g0^$t1760596012^$j60^$l0^$h0; _ga=GA1.2.236118060.1699008647; _gid=GA1.2.1440720024.1780900194; _ga_S2ZX95NLFL=GS2.2.s1781146286^$o455^$g0^$t1781146286^$j60^$l0^$h0; CASAuth=e4b180c44a39bdf70c6fcd740ffae2ab0d7bd3be4dbf078f3c9e9c20f31ed084; _gat=1; XSRF-TOKEN=eyJpdiI6InM4VXZ4WHgyREljcHQ4SHNadXphRkE9PSIsInZhbHVlIjoiU2lhU3hZbzdDYjhMVmlENGJIbTVQYzcyMXhicndOMm40TGFLWEVvVzh5SmswYXNxZmpWTWJMaUQwazd3TlBEdlp3QlBhZm45Y1l2QlhzTzJNellPVVk5WG5NQUxDQWxhdHFzZTBPdkpOMmJwSnRYTXI0STd4MnhIN05EVkVabDIiLCJtYWMiOiI5YzFmODNkZTJlZDAzM2YyYzNhZjMxYmQ3YjFkY2U5NTU0MWNiMWYyZTYyOTU4Mjk2YzI4YjZkMDhjNDdiNzNmIiwidGFnIjoiIn0^%^3D; s_i_m_p_k_b_p_p_g_session=eyJpdiI6Ik00bDRKdDJyV1RpVEFMOWtwaDZtM0E9PSIsInZhbHVlIjoiVWJkWTFiWEM3eXZwUTYxdERBcWhLY3hIQlZobEpWbS9vMlMzMUY2Q3NCNldIdmVManR0WU0wSGZQQmNFWlE2eHF4dWZSMjczemozNDJXc0FDT0Z5a1ZXK3RsbXV4Zko1Q1JYVEY5SGQwK1BwNTFBOVhSd0pta2JuL0pSUGlTU0oiLCJtYWMiOiI3YjJiYTRhZTUyNzEyZjJlMmRlYzY4NjRlMjgwNDA1OTdjZTg0ZGU5MjBjMGMxNWMyZTM2NmU2NTlhNzY2NDNhIiwidGFnIjoiIn0^%^3D; _ga_DP6E6W3NFV=GS2.2.s1781154231^$o498^$g1^$t1781157299^$j48^$l0^$h0^" ^
+  -H ^"origin: https://ppg.simpkb.id^" ^
+  -H ^"priority: u=1, i^" ^
+  -H ^"referer: https://ppg.simpkb.id/^" ^
+  -H ^"sec-ch-ua: ^\^"Google Chrome^\^";v=^\^"149^\^", ^\^"Chromium^\^";v=^\^"149^\^", ^\^"Not)A;Brand^\^";v=^\^"24^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  -H ^"sec-fetch-dest: empty^" ^
+  -H ^"sec-fetch-mode: cors^" ^
+  -H ^"sec-fetch-site: same-site^" ^
+  -H ^"user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36^"

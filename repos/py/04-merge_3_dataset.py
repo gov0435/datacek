@@ -18,8 +18,13 @@ def extract_ptk_fallback(peserta, potensi, verval):
             ptk = src.get('ptk', {}) or {}
         else:
             ptk = {}
-        if ptk.get('nama'):
-            sekolah = ptk.get('ptk_sekolah', {}).get('sekolah', {}) if ptk.get('ptk_sekolah') else {}
+        if not ptk.get('nama'):
+            continue
+
+        # Coba extract dari ptk.ptk_sekolah (struktur peserta/potensi)
+        ptk_sekolah = ptk.get('ptk_sekolah')
+        if ptk_sekolah:
+            sekolah = ptk_sekolah.get('sekolah', {}) or {}
             jenjang_obj = sekolah.get('m_jenjang', {}) or {}
             kota_obj = sekolah.get('m_kota', {}) or {}
             propinsi_obj = sekolah.get('m_propinsi', {}) or {}
@@ -35,6 +40,27 @@ def extract_ptk_fallback(peserta, potensi, verval):
                 'sekolah_kota': kota_obj.get('keterangan') if kota_obj else None,
                 'sekolah_propinsi': propinsi_obj.get('keterangan') if propinsi_obj else None,
             }
+
+        # Fallback: extract dari flat fields (struktur verval_profil.json)
+        sekolah_nama = src.get('sekolah')
+        if sekolah_nama:
+            m_jenjang = src.get('m_jenjang', {}) or {}
+            m_kota = src.get('m_kota', {}) or {}
+            m_propinsi = src.get('m_propinsi', {}) or {}
+            return {
+                'nama': ptk.get('nama'),
+                'nuptk': ptk.get('nuptk'),
+                'no_hp': src.get('no_hp'),
+                'no_ukg': ptk.get('no_ukg'),
+                'is_guru_dapodik': ptk.get('is_guru_dapodik'),
+                'sekolah_nama': sekolah_nama,
+                'sekolah_npsn': src.get('npsn'),
+                'sekolah_jenjang': m_jenjang.get('singkat') if m_jenjang else None,
+                'sekolah_kota': m_kota.get('keterangan') if m_kota else None,
+                'sekolah_propinsi': m_propinsi.get('keterangan') if m_propinsi else None,
+            }
+
+        # ptk ada tapi tanpa data sekolah, lanjut ke source berikutnya
     return {}
 
 

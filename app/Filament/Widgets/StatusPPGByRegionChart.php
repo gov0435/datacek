@@ -3,13 +3,13 @@
 namespace App\Filament\Widgets;
 
 use App\Enums\KabKota;
-use App\Enums\StatusPPG;
-use App\Models\PotensiPpg;
+use App\Enums\PotensiStatus;
+use App\Models\SurveyPpg;
 use Filament\Widgets\ChartWidget;
 
 class StatusPPGByRegionChart extends ChartWidget
 {
-    protected ?string $heading = 'Distribusi Status PPG Berdasarkan Wilayah';
+    protected ?string $heading = 'Distribusi Keberminatan PPG Berdasarkan Wilayah';
 
     protected int|string|array $columnSpan = 'full';
 
@@ -27,22 +27,19 @@ class StatusPPGByRegionChart extends ChartWidget
             KabKota::KabPohuwato->value,
         ];
 
-        $statusCases = StatusPPG::cases();
-        $kabKotaList = array_slice($regions, 1); // exclude Provinsi
+        $statusCases = PotensiStatus::cases();
 
         $datasets = [];
 
         foreach ($statusCases as $status) {
             $data = [];
             foreach ($regions as $region) {
-                $query = PotensiPpg::query()->where('statusppg', $status->value);
+                $query = SurveyPpg::query()->where('has_potensi', true)->where('potensi_status', $status->value);
 
                 if ($region === 'Provinsi') {
-                    // Provinsi includes SLB, SMA, SMK from all regions
-                    $query->whereIn('jenjang', ['SLB', 'SMA', 'SMK']);
+                    $query->whereIn('sekolah_jenjang', ['SLB', 'SMA', 'SMK']);
                 } else {
-                    // Kab/Kota includes PAUD, SD, SMP from that region
-                    $query->where('kota', $region)->whereIn('jenjang', ['PAUD', 'SD', 'SMP']);
+                    $query->where('sekolah_kota', $region)->whereIn('sekolah_jenjang', ['PAUD', 'SD', 'SMP', 'Lainnya']);
                 }
 
                 $data[] = $query->count();
@@ -57,15 +54,14 @@ class StatusPPGByRegionChart extends ChartWidget
             ];
         }
 
-        // Add null status count
         $nullData = [];
         foreach ($regions as $region) {
-            $query = PotensiPpg::query()->whereNull('statusppg');
+            $query = SurveyPpg::query()->where('has_potensi', true)->whereNull('potensi_status');
 
             if ($region === 'Provinsi') {
-                $query->whereIn('jenjang', ['SLB', 'SMA', 'SMK']);
+                $query->whereIn('sekolah_jenjang', ['SLB', 'SMA', 'SMK']);
             } else {
-                $query->where('kota', $region)->whereIn('jenjang', ['PAUD', 'SD', 'SMP']);
+                $query->where('sekolah_kota', $region)->whereIn('sekolah_jenjang', ['PAUD', 'SD', 'SMP', 'Lainnya']);
             }
 
             $nullData[] = $query->count();
@@ -81,8 +77,17 @@ class StatusPPGByRegionChart extends ChartWidget
             ];
         }
 
+        $totals = array_fill(0, count($regions), 0);
+        foreach ($datasets as $dataset) {
+            foreach ($dataset['data'] as $i => $value) {
+                $totals[$i] += $value;
+            }
+        }
+
+        $labels = array_map(fn (string $region, int $i) => $region.' ('.$totals[$i].')', $regions, array_keys($regions));
+
         return [
-            'labels' => $regions,
+            'labels' => $labels,
             'datasets' => $datasets,
         ];
     }
@@ -112,17 +117,13 @@ class StatusPPGByRegionChart extends ChartWidget
         return 'bar';
     }
 
-    private function getColorForStatus(StatusPPG $status): string
+    private function getColorForStatus(PotensiStatus $status): string
     {
         return match ($status) {
-            StatusPPG::SudahSerdik => '#10B981',       // green (success)
-            StatusPPG::SementaraSerdik => '#3B82F6',   // blue (info)
-            StatusPPG::BelumSerdik => '#F59E0B',       // amber (warning)
-            StatusPPG::BelumS1 => '#8e7cc3',           // purple
-            StatusPPG::BukanGuru => '#EF4444',         // red (danger)
-            StatusPPG::Meninggal => '#DC2626',         // dark red (danger)
-            StatusPPG::TidakAktif => '#991B1B',        // darker red (danger)
-            StatusPPG::Pensiun => '#7C2D12',           // dark orange (danger)
+            PotensiStatus::Berminat => '#10B981',
+            PotensiStatus::SedangPPG => '#3B82F6',
+            PotensiStatus::SudahBerserdik => '#8B5CF6',
+            PotensiStatus::TidakBerminat => '#EF4444',
         };
     }
 }

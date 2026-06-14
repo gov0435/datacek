@@ -2,8 +2,8 @@
 
 namespace App\Filament\App\Widgets;
 
-use App\Enums\StatusDaftar;
-use App\Models\PotensiPpg;
+use App\Enums\PotensiStatus;
+use App\Models\SurveyPpg;
 use App\Models\User;
 use App\Models\Whitelist;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RegistrationStatsWidget extends BaseWidget
 {
-    private const JENJANG_KAB_KOTA = ['PAUD', 'SD', 'SMP'];
+    private const JENJANG_KAB_KOTA = ['PAUD', 'SD', 'SMP', 'Lainnya'];
 
     private const JENJANG_PROVINSI = ['SLB', 'SMA', 'SMK'];
 
@@ -20,52 +20,78 @@ class RegistrationStatsWidget extends BaseWidget
 
     protected function getStats(): array
     {
-        $user = Auth::user();
         $kabKota = $this->getAuthenticatedWhitelistKabKota();
 
         // Base query with scope filter
-        $query = PotensiPpg::query();
+        $query = SurveyPpg::query()->where('has_potensi', true);
 
         // Check if user is provinsi scope
         if ($this->isProvinsiScope()) {
             // Filter by jenjang provinsi
-            $query->whereIn('jenjang', self::JENJANG_PROVINSI);
+            $query->whereIn('sekolah_jenjang', self::JENJANG_PROVINSI);
         } else {
             // Filter by jenjang kab/kota
-            $query->whereIn('jenjang', self::JENJANG_KAB_KOTA);
+            $query->whereIn('sekolah_jenjang', self::JENJANG_KAB_KOTA);
 
             // Filter by kabkota if exists
             if ($kabKota !== null) {
-                $query->where('kota', $kabKota);
+                $query->where('sekolah_kota', $kabKota);
             }
         }
 
         // Get counts
         $totalCount = $query->count();
 
-        $layakCount = (clone $query)
-            ->where('layak_daftar', 'Layak Daftar')
+        $belumMengisiCount = (clone $query)
+            ->whereNull('potensi_status')
             ->count();
 
-        $sudahDaftarCount = (clone $query)
-            ->where('status_daftar', StatusDaftar::SudahDaftar->value)
+        $berminatCount = (clone $query)
+            ->where('potensi_status', PotensiStatus::Berminat->value)
+            ->count();
+
+        $sedangPpgCount = (clone $query)
+            ->where('potensi_status', PotensiStatus::SedangPPG->value)
+            ->count();
+
+        $sudahBerserdikCount = (clone $query)
+            ->where('potensi_status', PotensiStatus::SudahBerserdik->value)
+            ->count();
+
+        $tidakBerminatCount = (clone $query)
+            ->where('potensi_status', PotensiStatus::TidakBerminat->value)
             ->count();
 
         return [
-            Stat::make('Total Potensi PPG', $totalCount)
-                ->description('Guru mendapat notif berminat PPG - '.$kabKota)
+            Stat::make('Total', $totalCount)
+                ->description('Guru di '.$kabKota)
                 ->descriptionIcon('heroicon-m-users')
                 ->color('warning'),
 
-            Stat::make('Layak Daftar', $layakCount)
-                ->description('Calon peserta yang layak mendaftar')
-                ->descriptionIcon('heroicon-m-check-circle')
+            Stat::make('Belum Mengisi', $belumMengisiCount)
+                ->description('Belum mengisi survey')
+                ->descriptionIcon('heroicon-m-question-mark-circle')
+                ->color('gray'),
+
+            Stat::make('Berminat', $berminatCount)
+                ->description('Menyatakan berminat PPG')
+                ->descriptionIcon('heroicon-m-hand-thumb-up')
+                ->color('success'),
+
+            Stat::make('Sedang PPG', $sedangPpgCount)
+                ->description('Sedang dalam proses PPG')
+                ->descriptionIcon('heroicon-m-academic-cap')
                 ->color('info'),
 
-            Stat::make('Sudah Daftar', $sudahDaftarCount)
-                ->description('Calon peserta yang sudah mendaftar')
-                ->descriptionIcon('heroicon-m-clipboard-document-check')
-                ->color('success'),
+            Stat::make('Sudah Berserdik', $sudahBerserdikCount)
+                ->description('Sudah memiliki sertifikat')
+                ->descriptionIcon('heroicon-m-document-check')
+                ->color('gray'),
+
+            Stat::make('Tidak Berminat', $tidakBerminatCount)
+                ->description('Tidak berminat mengikuti PPG')
+                ->descriptionIcon('heroicon-m-x-circle')
+                ->color('danger'),
         ];
     }
 

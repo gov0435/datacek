@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Filament\App\Resources\DataPotensis;
+namespace App\Filament\App\Resources\DataKeberminatan;
 
-use App\Enums\Jenjang;
-use App\Filament\App\Resources\DataPotensis\Pages\ListDataPotensis;
-use App\Filament\App\Resources\DataPotensis\Tables\DataPotensisTable;
-use App\Models\PotensiPpg;
+use App\Filament\App\Resources\DataKeberminatan\Pages\ListDataKeberminatans;
+use App\Filament\App\Resources\DataKeberminatan\Tables\DataKeberminatansTable;
+use App\Models\SurveyPpg;
 use App\Models\User;
 use App\Models\Whitelist;
 use BackedEnum;
@@ -15,33 +14,30 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-class DataPotensiResource extends Resource
+class DataKeberminatanResource extends Resource
 {
-    private const JENJANG_KAB_KOTA = ['PAUD', 'SD', 'SMP'];
+    protected static ?string $slug = 'data-keberminatan';
+
+    private const JENJANG_KAB_KOTA = ['PAUD', 'SD', 'SMP', 'Lainnya'];
 
     private const JENJANG_PROVINSI = ['SLB', 'SMA', 'SMK'];
 
-    protected static ?string $model = PotensiPpg::class;
+    protected static ?string $model = SurveyPpg::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
-    protected static ?string $navigationLabel = 'Data Potensi';
-
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false;
-    }
+    protected static ?string $navigationLabel = 'Data Keberminatan';
 
     public static function table(Table $table): Table
     {
-        return DataPotensisTable::configure($table);
+        return DataKeberminatansTable::configure($table);
     }
 
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()
             ->whereNotNull('ptk_id')
-            ->whereIn('jenjang', static::getAllowedJenjangValues());
+            ->whereIn('sekolah_jenjang', static::getAllowedJenjangValues());
 
         if (static::isProvinsiScope()) {
             return $query;
@@ -53,7 +49,7 @@ class DataPotensiResource extends Resource
             return $query->whereRaw('1 = 0');
         }
 
-        return $query->where('kota', $kabKota);
+        return $query->where('sekolah_kota', $kabKota);
     }
 
     public static function getKabKotaFilterOptions(): array
@@ -82,16 +78,6 @@ class DataPotensiResource extends Resource
         $scopeLabel = static::getScopeLabelForAuthenticatedUser();
 
         return $scopeLabel !== null && str_contains(strtolower($scopeLabel), 'provinsi');
-    }
-
-    public static function getJenjangFilterOptions(): array
-    {
-        $allowedJenjangValues = static::getAllowedJenjangValues();
-
-        return collect(Jenjang::cases())
-            ->filter(fn (Jenjang $jenjang): bool => in_array($jenjang->value, $allowedJenjangValues, true))
-            ->mapWithKeys(fn (Jenjang $jenjang): array => [$jenjang->value => $jenjang->value])
-            ->all();
     }
 
     public static function getAllowedJenjangValues(): array
@@ -174,7 +160,7 @@ class DataPotensiResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListDataPotensis::route('/'),
+            'index' => ListDataKeberminatans::route('/'),
         ];
     }
 }

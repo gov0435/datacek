@@ -13,7 +13,7 @@
 
         <x-slot name="afterHeader">
             <x-filament::button
-                :href="route('filament.app.resources.data-potensis.index')"
+                :href="route('filament.app.resources.data-keberminatan.index')"
                 tag="a"
                 color="primary"
                 icon="heroicon-m-document-text"

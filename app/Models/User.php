@@ -41,6 +41,16 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    public function isKgtk(): bool
+    {
+        return $this->role === 'kgtk';
+    }
+
+    public function isMember(): bool
+    {
+        return $this->role === 'member' || $this->role === null;
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() !== 'admin') {

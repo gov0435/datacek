@@ -35,6 +35,14 @@ class WhitelistForm
                             ->label('Kabupaten/Kota')
                             ->options(KabKota::class)
                             ->required(),
+                        Select::make('role')
+                            ->label('Role')
+                            ->options([
+                                'member' => 'Member',
+                                'kgtk' => 'KGTK',
+                            ])
+                            ->default('member')
+                            ->required(),
                     ])
                     ->columns(1),
             ]);

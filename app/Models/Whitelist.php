@@ -6,7 +6,7 @@ use App\Enums\KabKota;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['email', 'nama', 'instansi', 'kabkota'])]
+#[Fillable(['email', 'nama', 'instansi', 'kabkota', 'role'])]
 class Whitelist extends Model
 {
     /**

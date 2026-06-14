@@ -283,16 +283,16 @@ Resource `app/Filament/App/Resources/BeritaAcara/` (pola sama `DataKeberminatan`
 `status_ba` (badge 3-state: **Belum Diupload** / **Pending** / **Valid**), `unggahanValid.file_name`, `unggahanValid.updated_at`, `jumlah_versi` (count relasi).
 
 ### 6.3 Aksi
-- **Lihat Guru** (`Action` modal): daftar guru `potensi_status IS DISTINCT FROM 'Berminat'` di sekolah tsb (`nama`, `no_hp`, `potensi_status`, `potensi_alasan`) dari `survey_ppg`.
-- **Upload Berita Acara** (`Action` + modal schema):
-  - `FileUpload::make('file')->disk('s3')->visibility('private')->directory("berita-acara/{npsn}")->acceptedFileTypes(['application/pdf'])->maxSize(25600)` (**PDF only, maks 25 MB** = 25.600 KB).
-  - `Textarea::make('catatan')` opsional.
-  - `->action()` dalam `DB::transaction`:
-    1. `update` semua unggahan sekolah tsb `is_valid=false`;
-    2. `create` unggahan baru `is_valid=true`, isi metadata + `uploaded_by`.
-    File lama tetap ada di S3 & DB (riwayat).
-- **Riwayat Versi** (`Action` modal): list semua unggahan (tanggal, nama file, pengunggah, badge valid) + unduh per versi.
-- **Unduh BA Valid** (`Action`): `temporaryUrl()` / stream dari S3 untuk file `is_valid=true`.
+- **Detail** (`Action` slideOver): unified panel menampilkan:
+  - **Informasi Sekolah** (NPSN, nama, jenjang, kab/kota, jumlah guru) — read-only.
+  - **Daftar Guru Non-Berminat** — tabel read-only, dari `survey_ppg` (nama, no HP, status, alasan).
+  - **Upload Berita Acara** — form dengan:
+    - `FileUpload::make('file')->disk('s3')->visibility('private')->directory("berita-acara/{npsn}")->acceptedFileTypes(['application/pdf'])->maxSize(25000)` (**PDF only, maks 25 MB** = 25.000 KB) + `FileHelper::generateUniqueFileName()`.
+    - `Textarea::make('catatan')` opsional.
+    - `->action()` dalam `DB::transaction`:
+      1. `update` semua unggahan sekolah tsb `is_valid=false`;
+      2. `create` unggahan baru `is_valid=true`, isi metadata + `uploaded_by`.
+      File lama tetap ada di S3 & DB (riwayat).
 
 > **Aturan valid (final):** **upload terakhir = otomatis valid**. Kolom `is_valid` tetap ada sebagai penanda eksplisit (versi terbaru `true`, sisanya `false`). Tidak ada aksi "tandai valid" manual.
 
@@ -310,19 +310,23 @@ Resource `app/Filament/App/Resources/DokumenDinas/` (panel App). Berbeda dari Be
 **per wilayah dinas (bukan per sekolah)** & **tanpa generate admin**.
 
 ### 7.1 Sumber baris & scope
-- Baris = **per `jenis` dokumen** untuk wilayah dinas si kgtk.
-  - **Pendekatan**: Tabel menampilkan **semua jenis** (daftar statis dari `JenisDokumenDinas` enum), LEFT-join ke versi valid `dokumen_dinas` → kgtk langsung tahu jenis mana yang belum diupload / sudah ada.
+- Baris = **dokumen valid** per wilayah dinas si kgtk.
+  - **Query sederhana**: `WHERE kabkota = ? AND is_valid = true` — tampil hanya dokumen yang sudah valid.
+  - Upload dokumen baru → via **header action** dengan dropdown enum `jenis`, tidak perlu pre-show semua jenis di tabel.
 - **Scope** = `kabkota` dari `Whitelist` user (reuse helper `DataKeberminatanResource`). kgtk hanya melihat/upload dokumen untuk wilayahnya sendiri.
 
 ### 7.2 Kolom
-`jenis` (label/badge), `status` (**Belum Diupload** / **Pending** / **Valid**), `file_name`, `updated_at`, `jumlah_versi`.
+`jenis` (label/badge), `status` (**Valid**), `file_name`, `updated_at`, `jumlah_versi`.
 
 ### 7.3 Aksi
-- **Upload Dokumen** (`Action` + modal): 
-  `FileUpload::make('file')->disk('s3')->visibility('private')->directory("dokumen-dinas/{kabkota}/{jenis}")->acceptedFileTypes(['application/pdf'])->maxSize(25600)` (**PDF, maks 25 MB**) + `Textarea catatan`.
-   - `->action()` `DB::transaction`: `update` semua versi (`kabkota`,`jenis`) `is_valid=false` → `create` versi baru `is_valid=true`, isi `uploaded_by`. File lama tetap.
-- **Riwayat Versi** (`Action` modal): list versi per (`kabkota`,`jenis`) + unduh per versi.
-- **Unduh Dokumen Valid** (`Action`): `temporaryUrl()` dari S3 untuk versi `is_valid=true`.
+- **Header Action: Upload Dokumen** (tombol atas tabel):
+  - Dropdown pilih `jenis` dari enum `JenisDokumenDinas` (BeritaAcara, DokumenLain).
+  - `FileUpload::make('file')->disk('s3')->visibility('private')->directory("ppg/dokumen-dinas/{kabkota}")->acceptedFileTypes(['application/pdf'])->maxSize(25600)` (**PDF, maks 25 MB**) + `Textarea catatan` opsional.
+  - `->action()` dalam `DB::transaction`: `update` semua versi (`kabkota`,`jenis`) `is_valid=false` → `create` versi baru `is_valid=true`, isi `uploaded_by`. File lama tetap.
+  - Upload **unlimited** — user bisa upload berkali-kali untuk jenis yg sama, semua versi tersimpan.
+- **Record Actions**:
+  - **Riwayat Versi** (`Action` modal): list versi per (`kabkota`,`jenis`) + unduh per versi.
+  - **Unduh Dokumen Valid** (`Action`): `temporaryUrl()` dari S3 untuk versi `is_valid=true`.
 
 ### 7.4 Akses & admin
 - Visibilitas resource = `Auth::user()?->isKgtk()` (sama seperti Berita Acara).
@@ -343,13 +347,14 @@ Gunakan `Storage::fake('s3')` + factory. `php artisan make:test --pest ...`.
    - sekolah yang baru memenuhi syarat (NULL → terisi) ikut masuk saat re-generate.
 3. **Scope kgtk**: kgtk kab/kota hanya melihat sekolah di kabkota whitelist-nya; kgtk provinsi melihat sekolah jenjang SLB/SMA/SMK se-provinsi.
 4. **Role**: kgtk lihat resource BA **dan** Data Keberminatan; member tidak melihat BA.
-5. **Upload versioned**:
-   - upload ke `s3` fake tersimpan; `is_valid=true`;
+5. **SlideOver Detail**:
+   - detail panel membuka dengan slideOver (kanan);
+   - info sekolah, guru list, dan upload form dalam satu panel;
+   - upload file ke `s3` fake tersimpan; `is_valid=true`;
    - upload kedua → versi lama `is_valid=false` & **tetap ada** (count = 2), versi baru `is_valid=true`;
    - `uploaded_by` benar.
 6. **Validasi**: non-PDF / over `maxSize` → `assertHasFormErrors`.
-7. **Unduh**: aksi mengembalikan file `is_valid=true`.
-8. **Dokumen Dinas**:
+7. **Dokumen Dinas**:
    - upload per (`kabkota`,`jenis`) tersimpan ke `s3` fake, `is_valid=true`;
    - upload kedua jenis sama → versi lama `is_valid=false` & tetap ada, baru `is_valid=true`;
    - scope: kgtk hanya melihat/upload dokumen untuk `kabkota`-nya sendiri.
@@ -381,7 +386,7 @@ Jalankan: `php artisan test --compact --filter=BeritaAcara` dan `--filter=Dokume
 7. **Dokumen Dinas** = tabel `dokumen_dinas` terpisah, per wilayah (`kabkota`/`provinsi`) & per `jenis`, versioning + flag valid yang sama, PDF maks 25 MB, tanpa generate admin.
 8. **Status badge** = **3-state**: `Belum Diupload` | `Pending` | `Valid` (untuk BA dan Dokumen Dinas).
 9. **Enum `JenisDokumenDinas`** = 2 nilai: `BeritaAcara`, `DokumenLain`.
-10. **Dokumen Dinas UI** = Pendekatan 1 (LEFT-join semua jenis, tampil semua jenis dokumen di tabel, kgtk upload per jenis).
+10. **Dokumen Dinas UI** = Query sederhana (hanya dokumen valid), **Header Action "Upload Dokumen Dinas"** dengan dropdown enum jenis, unlimited versi per jenis.
 
 ### Sisa yang masih perlu nilai konkret (bukan blocker desain)
 - Kredensial S3: `AWS_ENDPOINT`, `AWS_REGION`, `AWS_BUCKET`, key/secret.

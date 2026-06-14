@@ -49,6 +49,12 @@ class SocialAuthController extends Controller
             ->first();
 
         if ($existingUser !== null) {
+            $existingUser->update([
+                'role' => $whitelist->role ?? 'member',
+                'instansi' => $whitelist->instansi,
+                'kabkota' => $whitelist->kabkota,
+            ]);
+
             Auth::login($existingUser);
             $request->session()->regenerate();
 
@@ -65,7 +71,7 @@ class SocialAuthController extends Controller
             'provider' => strtolower($provider),
             'provider_id' => $providerId === null ? null : (string) $providerId,
             'avatar' => $socialiteUser->getAvatar(),
-            'role' => 'member',
+            'role' => $whitelist->role ?? 'member',
         ]);
 
         Auth::login($user);

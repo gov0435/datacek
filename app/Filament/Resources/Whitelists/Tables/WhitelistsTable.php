@@ -31,6 +31,16 @@ class WhitelistsTable
                     ->label('Kab/Kota')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('role')
+                    ->label('Role')
+                    ->badge()
+                    ->color(fn (?string $state): string => match ($state) {
+                        'kgtk' => 'warning',
+                        'admin' => 'danger',
+                        default => 'gray',
+                    })
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y H:i')

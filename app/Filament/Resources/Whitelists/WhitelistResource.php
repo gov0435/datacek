@@ -22,6 +22,8 @@ class WhitelistResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'email';
 
+    protected static ?int $navigationSort = 3;
+
     public static function getNavigationLabel(): string
     {
         return 'Whitelist';

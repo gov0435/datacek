@@ -45,7 +45,7 @@ class SurveyPpgsTable
                     ->label('💾 Potensi')
                     ->boolean(),
                 IconColumn::make('has_peserta')
-                    ->label('💾 Berminat')
+                    ->label('💾 Isi Survey')
                     ->boolean(),
                 IconColumn::make('has_verval')
                     ->label('💾 Lolos Adm')
@@ -85,15 +85,15 @@ class SurveyPpgsTable
                     ->trueLabel('Ada')
                     ->falseLabel('Tidak ada'),
                 TernaryFilter::make('has_peserta')
-                    ->label('💾 Berminat')
-                    ->trueLabel('Ada')
-                    ->falseLabel('Tidak ada'),
+                    ->label('💾 Isi Survey')
+                    ->trueLabel('Sudah')
+                    ->falseLabel('Belum'),
                 TernaryFilter::make('has_verval')
                     ->label('💾 Lolos Adm')
                     ->trueLabel('Lolos')
                     ->falseLabel('Belum'),
                 SelectFilter::make('potensi_status')
-                    ->label('Status Potensi')
+                    ->label('Survey')
                     ->options(PotensiStatus::class),
                 SelectFilter::make('peserta_keberminatan_status')
                     ->label('Status Keberminatan')

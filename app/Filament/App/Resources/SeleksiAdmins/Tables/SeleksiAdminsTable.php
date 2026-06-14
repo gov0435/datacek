@@ -4,7 +4,6 @@ namespace App\Filament\App\Resources\SeleksiAdmins\Tables;
 
 use App\Filament\App\Resources\SeleksiAdmins\SeleksiAdminResource;
 use Filament\Actions\Action;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;

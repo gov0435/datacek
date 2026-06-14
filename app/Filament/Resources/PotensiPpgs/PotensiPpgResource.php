@@ -18,6 +18,8 @@ class PotensiPpgResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Potensi PPG';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function getNavigationLabel(): string
     {
         return 'Potensi PPG';

@@ -25,7 +25,7 @@ class RegistrationStatsWidget extends BaseWidget
 
         return [
             Stat::make('Total Potensi', $totalPotensi)
-                ->description('Guru yang telah mengisi potensi PPG')
+                ->description('Total Guru aktif yang belum serdik')
                 ->descriptionIcon('heroicon-m-users')
                 ->color('info'),
 

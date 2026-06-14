@@ -25,9 +25,6 @@ class SurveyPpgsTable
                     ->label('Nama')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('no_ukg')
-                    ->label('No UKG')
-                    ->searchable(),
                 TextColumn::make('peserta_nik')
                     ->label('NIK')
                     ->searchable(),
@@ -52,9 +49,6 @@ class SurveyPpgsTable
                     ->boolean(),
                 IconColumn::make('has_verval')
                     ->label('💾 Lolos Adm')
-                    ->boolean(),
-                IconColumn::make('is_guru_dapodik')
-                    ->label('Guru Dapodik')
                     ->boolean(),
                 TextColumn::make('potensi_status')
                     ->label('Status Potensi')
@@ -81,46 +75,11 @@ class SurveyPpgsTable
                     ->badge()
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('verval_wkt_ajuan')
-                    ->label('Waktu Ajuan')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('verval_wkt_verval')
-                    ->label('Waktu Verval')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                IconColumn::make('verval_is_peserta')
-                    ->label('Peserta Verval')
-                    ->boolean(),
-                TextColumn::make('verval_kandidat_skor_total_final')
-                    ->label('Skor Final')
-                    ->numeric()
-                    ->sortable(),
-                IconColumn::make('verval_kandidat_is_lulus')
-                    ->label('Lulus')
-                    ->boolean(),
-                TextColumn::make('verval_kandidat_status_seleksi')
-                    ->label('Status Seleksi')
-                    ->badge()
-                    ->searchable()
-                    ->sortable(),
                 TextColumn::make('keterangan')
                     ->label('Keterangan')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->searchable(),
             ])
             ->filters([
-                SelectFilter::make('potensi_status')
-                    ->label('Status Potensi')
-                    ->options(PotensiStatus::class),
-                SelectFilter::make('peserta_layak_daftar')
-                    ->label('Layak Daftar')
-                    ->options(LayakDaftar::class),
-                SelectFilter::make('verval_status')
-                    ->label('Status Verval')
-                    ->options(VervalStatus::class),
                 TernaryFilter::make('has_potensi')
                     ->label('💾 Potensi')
                     ->trueLabel('Ada')
@@ -133,10 +92,18 @@ class SurveyPpgsTable
                     ->label('💾 Lolos Adm')
                     ->trueLabel('Lolos')
                     ->falseLabel('Belum'),
-                TernaryFilter::make('is_guru_dapodik')
-                    ->label('Guru Dapodik')
-                    ->trueLabel('Ya')
-                    ->falseLabel('Tidak'),
+                SelectFilter::make('potensi_status')
+                    ->label('Status Potensi')
+                    ->options(PotensiStatus::class),
+                SelectFilter::make('peserta_keberminatan_status')
+                    ->label('Status Keberminatan')
+                    ->options(PotensiStatus::class),
+                SelectFilter::make('peserta_layak_daftar')
+                    ->label('Layak Daftar')
+                    ->options(LayakDaftar::class),
+                SelectFilter::make('verval_status')
+                    ->label('Status Verval')
+                    ->options(VervalStatus::class),
             ])
             ->defaultSort('nama')
             ->recordActions([])

@@ -52,7 +52,7 @@ class JadwalPPGWidget extends Widget
                 [
                     'no' => 3,
                     'aktivitas' => 'Pendaftaran PPG bagi Guru Tertentu Tahun 2026',
-                    'tanggal' => '1 April - 30 Mei 2026',
+                    'tanggal' => '1 April - 30 Mei 2026 [Perpanjangan 15 Juli]',
                     'icon' => 'heroicon-o-pencil-square',
                     'iconBg' => 'bg-blue-600',
                     'textColor' => 'text-blue-700 dark:text-blue-400',
@@ -63,8 +63,8 @@ class JadwalPPGWidget extends Widget
                 ],
                 [
                     'no' => 4,
-                    'aktivitas' => 'Verval Lanjutan oleh Dinas Pendidikan',
-                    'tanggal' => '1 - 30 Mei 2026',
+                    'aktivitas' => 'Verval Lanjutan oleh Dinas Pendidikan (Perpanjangan ke-3)',
+                    'tanggal' => '1 Mei - 10 Juli 2026',
                     'icon' => 'heroicon-o-shield-check',
                     'iconBg' => 'bg-amber-500',
                     'textColor' => 'text-amber-700 dark:text-amber-400',
@@ -75,8 +75,8 @@ class JadwalPPGWidget extends Widget
                 ],
                 [
                     'no' => 5,
-                    'aktivitas' => 'Pengumuman hasil seleksi administrasi PPG bagi Guru Tertentu tahun 2026',
-                    'tanggal' => '4 Juni 2026',
+                    'aktivitas' => 'Pengumuman hasil seleksi administrasi PPG bagi Guru Tertentu tahun 2026 (Periode 1)',
+                    'tanggal' => '10 Juni 2026',
                     'icon' => 'heroicon-o-megaphone',
                     'iconBg' => 'bg-rose-600',
                     'textColor' => 'text-rose-700 dark:text-rose-400',

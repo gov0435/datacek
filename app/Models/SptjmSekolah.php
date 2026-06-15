@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class BeritaAcaraSekolah extends Model
+class SptjmSekolah extends Model
 {
-    protected $table = 'berita_acara_sekolah';
+    protected $table = 'sptjm_sekolah';
 
     protected $fillable = [
         'sekolah_npsn',
@@ -24,12 +24,12 @@ class BeritaAcaraSekolah extends Model
 
     public function unggahan(): HasMany
     {
-        return $this->hasMany(BeritaAcaraUnggahan::class, 'berita_acara_sekolah_id');
+        return $this->hasMany(SptjmUnggahan::class, 'sptjm_sekolah_id');
     }
 
     public function unggahanValid(): HasOne
     {
-        return $this->hasOne(BeritaAcaraUnggahan::class, 'berita_acara_sekolah_id')
+        return $this->hasOne(SptjmUnggahan::class, 'sptjm_sekolah_id')
             ->where('is_valid', true)
             ->latestOfMany();
     }

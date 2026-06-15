@@ -1,12 +1,12 @@
 <?php
 
 use App\Enums\JenisDokumenDinas;
-use App\Filament\App\Resources\BeritaAcara\BeritaAcaraResource;
 use App\Filament\App\Resources\DokumenDinas\DokumenDinasResource;
-use App\Filament\Resources\BeritaAcaraSekolahs\BeritaAcaraSekolahResource;
-use App\Models\BeritaAcaraSekolah;
-use App\Models\BeritaAcaraUnggahan;
+use App\Filament\App\Resources\Sptjm\SptjmResource;
+use App\Filament\Resources\SptjmSekolahs\SptjmSekolahResource;
 use App\Models\DokumenDinas;
+use App\Models\SptjmSekolah;
+use App\Models\SptjmUnggahan;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,35 +24,35 @@ test('jenis dokumen dinas enum has correct values', function () {
 // ============================================================================
 // Models
 // ============================================================================
-test('berita acara sekolah model config', function () {
-    $model = new BeritaAcaraSekolah;
+test('sptjm sekolah model config', function () {
+    $model = new SptjmSekolah;
 
-    expect($model->getTable())->toBe('berita_acara_sekolah')
+    expect($model->getTable())->toBe('sptjm_sekolah')
         ->and($model->getFillable())->toContain('sekolah_npsn')
         ->and($model->getFillable())->toContain('jumlah_guru')
         ->and($model->getFillable())->toContain('generated_by');
 });
 
-test('berita acara sekolah has unggahan relation', function () {
-    $model = new BeritaAcaraSekolah;
+test('sptjm sekolah has unggahan relation', function () {
+    $model = new SptjmSekolah;
 
     expect($model->unggahan())->toBeInstanceOf(HasMany::class)
         ->and($model->unggahanValid())->toBeInstanceOf(HasOne::class)
         ->and($model->generatedBy())->toBeInstanceOf(BelongsTo::class);
 });
 
-test('berita acara unggahan model config', function () {
-    $model = new BeritaAcaraUnggahan;
+test('sptjm unggahan model config', function () {
+    $model = new SptjmUnggahan;
 
-    expect($model->getTable())->toBe('berita_acara_unggahan')
+    expect($model->getTable())->toBe('sptjm_unggahan')
         ->and($model->getCasts()['is_valid'])->toBe('boolean')
         ->and($model->getCasts()['file_size'])->toBe('integer');
 });
 
-test('berita acara unggahan belongs to berita acara sekolah', function () {
-    $model = new BeritaAcaraUnggahan;
+test('sptjm unggahan belongs to sptjm sekolah', function () {
+    $model = new SptjmUnggahan;
 
-    expect($model->beritaAcaraSekolah())->toBeInstanceOf(BelongsTo::class)
+    expect($model->sptjmSekolah())->toBeInstanceOf(BelongsTo::class)
         ->and($model->uploadedBy())->toBeInstanceOf(BelongsTo::class);
 });
 
@@ -106,14 +106,14 @@ test('user admin role returns false for both kgtk and member', function () {
 // ============================================================================
 // Resources
 // ============================================================================
-test('admin berita acara sekolah resource is list only', function () {
-    expect(BeritaAcaraSekolahResource::getModel())->toBe(BeritaAcaraSekolah::class)
-        ->and(array_keys(BeritaAcaraSekolahResource::getPages()))->toBe(['index']);
+test('admin sptjm sekolah resource is list only', function () {
+    expect(SptjmSekolahResource::getModel())->toBe(SptjmSekolah::class)
+        ->and(array_keys(SptjmSekolahResource::getPages()))->toBe(['index']);
 });
 
-test('app berita acara resource is list only', function () {
-    expect(BeritaAcaraResource::getModel())->toBe(BeritaAcaraSekolah::class)
-        ->and(array_keys(BeritaAcaraResource::getPages()))->toBe(['index']);
+test('app sptjm resource is list only', function () {
+    expect(SptjmResource::getModel())->toBe(SptjmSekolah::class)
+        ->and(array_keys(SptjmResource::getPages()))->toBe(['index']);
 });
 
 test('app dokumen dinas resource is list only', function () {

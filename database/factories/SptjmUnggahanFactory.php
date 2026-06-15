@@ -2,21 +2,21 @@
 
 namespace Database\Factories;
 
-use App\Models\BeritaAcaraSekolah;
-use App\Models\BeritaAcaraUnggahan;
+use App\Models\SptjmSekolah;
+use App\Models\SptjmUnggahan;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class BeritaAcaraUnggahanFactory extends Factory
+class SptjmUnggahanFactory extends Factory
 {
-    protected $model = BeritaAcaraUnggahan::class;
+    protected $model = SptjmUnggahan::class;
 
     public function definition(): array
     {
         return [
-            'berita_acara_sekolah_id' => BeritaAcaraSekolah::factory(),
+            'sptjm_sekolah_id' => SptjmSekolah::factory(),
             'disk' => 's3',
-            'file_path' => 'berita-acara/'.fake()->uuid().'.pdf',
+            'file_path' => 'sptjm/'.fake()->uuid().'.pdf',
             'file_name' => fake()->word().'.pdf',
             'file_mime' => 'application/pdf',
             'file_size' => fake()->numberBetween(100000, 5000000),

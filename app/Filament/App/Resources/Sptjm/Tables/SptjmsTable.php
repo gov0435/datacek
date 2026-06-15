@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\App\Resources\BeritaAcara\Tables;
+namespace App\Filament\App\Resources\Sptjm\Tables;
 
-use App\Filament\App\Resources\BeritaAcara\BeritaAcaraResource;
+use App\Filament\App\Resources\Sptjm\SptjmResource;
 use App\Helpers\FileHelper;
-use App\Models\BeritaAcaraSekolah;
+use App\Models\SptjmSekolah;
 use App\Models\SurveyPpg;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
@@ -23,18 +23,18 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
-class BeritaAcarasTable
+class SptjmsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->deferLoading()
-            ->heading(fn (): string => BeritaAcaraResource::getWhitelistKabKotaHeading())
-            ->description(new HtmlString('Berita Acara per Sekolah'))
+            ->heading(fn (): string => SptjmResource::getWhitelistKabKotaHeading())
+            ->description(new HtmlString('SPTJM per Sekolah'))
             ->columns([
                 TextColumn::make('sekolah_nama')
                     ->label('Sekolah')
-                    ->description(fn (BeritaAcaraSekolah $record): string => 'NPSN: '.$record->sekolah_npsn)
+                    ->description(fn (SptjmSekolah $record): string => 'NPSN: '.$record->sekolah_npsn)
                     ->searchable(['sekolah_nama', 'sekolah_npsn'])
                     ->sortable()
                     ->wrap(),
@@ -46,9 +46,9 @@ class BeritaAcarasTable
                     ->label('Jml Guru')
                     ->sortable()
                     ->alignRight(),
-                TextColumn::make('status_ba')
-                    ->label('Status BA')
-                    ->state(fn (BeritaAcaraSekolah $record): string => static::getStatusBa($record))
+                TextColumn::make('status_sptjm')
+                    ->label('Status SPTJM')
+                    ->state(fn (SptjmSekolah $record): string => static::getStatusSptjm($record))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'Valid' => 'success',
@@ -64,7 +64,7 @@ class BeritaAcarasTable
                     ->sortable(),
                 TextColumn::make('jumlah_versi')
                     ->label('Versi')
-                    ->state(fn (BeritaAcaraSekolah $record): int => $record->unggahan()->count())
+                    ->state(fn (SptjmSekolah $record): int => $record->unggahan()->count())
                     ->alignRight(),
             ])
             ->headerActions([])
@@ -76,7 +76,7 @@ class BeritaAcarasTable
             ->toolbarActions([]);
     }
 
-    private static function getStatusBa(BeritaAcaraSekolah $record): string
+    private static function getStatusSptjm(SptjmSekolah $record): string
     {
         $valid = $record->relationLoaded('unggahanValid')
             ? $record->unggahanValid
@@ -103,33 +103,33 @@ class BeritaAcarasTable
             ->label('Detail')
             ->icon('heroicon-o-arrow-top-right-on-square')
             ->slideOver()
-            ->schema(fn (BeritaAcaraSekolah $record): array => [
+            ->schema(fn (SptjmSekolah $record): array => [
                 Section::make('Informasi Sekolah')
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('sekolah_npsn')
                                     ->label('NPSN')
-                                    ->state(fn (BeritaAcaraSekolah $record): string => $record->sekolah_npsn),
+                                    ->state(fn (SptjmSekolah $record): string => $record->sekolah_npsn),
                                 TextEntry::make('sekolah_jenjang')
                                     ->label('Jenjang')
-                                    ->state(fn (BeritaAcaraSekolah $record): string => $record->sekolah_jenjang ?? '-'),
+                                    ->state(fn (SptjmSekolah $record): string => $record->sekolah_jenjang ?? '-'),
                                 TextEntry::make('sekolah_nama')
                                     ->label('Nama Sekolah')
-                                    ->state(fn (BeritaAcaraSekolah $record): string => $record->sekolah_nama ?? '-')
+                                    ->state(fn (SptjmSekolah $record): string => $record->sekolah_nama ?? '-')
                                     ->columnSpanFull(),
                                 TextEntry::make('sekolah_kota')
                                     ->label('Kabupaten/Kota')
-                                    ->state(fn (BeritaAcaraSekolah $record): string => $record->sekolah_kota ?? '-'),
+                                    ->state(fn (SptjmSekolah $record): string => $record->sekolah_kota ?? '-'),
                                 TextEntry::make('jumlah_guru')
                                     ->label('Jumlah Guru')
-                                    ->state(fn (BeritaAcaraSekolah $record): string => (string) ($record->jumlah_guru ?? '-')),
+                                    ->state(fn (SptjmSekolah $record): string => (string) ($record->jumlah_guru ?? '-')),
                             ]),
                     ])
                     ->compact(),
 
-                Section::make('Upload Berita Acara')
-                    ->afterHeader(fn (BeritaAcaraSekolah $record): array => ($unggahan = $record->unggahanValid()->first()) ? [
+                Section::make('Upload SPTJM')
+                    ->afterHeader(fn (SptjmSekolah $record): array => ($unggahan = $record->unggahanValid()->first()) ? [
 
                         Action::make('downloadLatest')
                             ->label('Unduh PDF')
@@ -140,10 +140,10 @@ class BeritaAcarasTable
                     ] : [])
                     ->schema([
                         FileUpload::make('file')
-                            ->label('File Berita Acara (PDF)')
+                            ->label('File SPTJM (PDF)')
                             ->columnSpanFull()
                             ->disk('s3')
-                            ->directory(fn (BeritaAcaraSekolah $record): string => 'ppg/berita-acara/'.$record->sekolah_npsn)
+                            ->directory(fn (SptjmSekolah $record): string => 'ppg/sptjm/'.$record->sekolah_npsn)
                             ->visibility('private')
                             ->acceptedFileTypes(['application/pdf'])
                             ->validationMessages([
@@ -165,7 +165,7 @@ class BeritaAcarasTable
                 Section::make('Daftar Guru Non-Berminat')
                     ->schema([
                         RepeatableEntry::make('daftar_guru')
-                            ->state(fn (BeritaAcaraSekolah $record): array => $record->sekolah_npsn
+                            ->state(fn (SptjmSekolah $record): array => $record->sekolah_npsn
                                 ? SurveyPpg::query()
                                     ->where('sekolah_npsn', $record->sekolah_npsn)
                                     ->where(function ($q) {
@@ -192,7 +192,7 @@ class BeritaAcarasTable
                     ->compact(),
 
             ])
-            ->action(function (array $data, BeritaAcaraSekolah $record): void {
+            ->action(function (array $data, SptjmSekolah $record): void {
                 DB::transaction(function () use ($data, $record): void {
                     $record->unggahan()->update(['is_valid' => false]);
 
@@ -209,7 +209,7 @@ class BeritaAcarasTable
                 });
 
                 Notification::make()
-                    ->title('Berita Acara berhasil diupload')
+                    ->title('SPTJM berhasil diupload')
                     ->success()
                     ->send();
             });

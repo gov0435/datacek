@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\BeritaAcaraSekolah;
+use App\Models\SptjmSekolah;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class BeritaAcaraSekolahFactory extends Factory
+class SptjmSekolahFactory extends Factory
 {
-    protected $model = BeritaAcaraSekolah::class;
+    protected $model = SptjmSekolah::class;
 
     public function definition(): array
     {

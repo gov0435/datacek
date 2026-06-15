@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class BeritaAcaraUnggahan extends Model
+class SptjmUnggahan extends Model
 {
-    protected $table = 'berita_acara_unggahan';
+    protected $table = 'sptjm_unggahan';
 
     protected $fillable = [
-        'berita_acara_sekolah_id',
+        'sptjm_sekolah_id',
         'disk',
         'file_path',
         'file_name',
@@ -29,9 +29,9 @@ class BeritaAcaraUnggahan extends Model
         ];
     }
 
-    public function beritaAcaraSekolah(): BelongsTo
+    public function sptjmSekolah(): BelongsTo
     {
-        return $this->belongsTo(BeritaAcaraSekolah::class, 'berita_acara_sekolah_id');
+        return $this->belongsTo(SptjmSekolah::class, 'sptjm_sekolah_id');
     }
 
     public function uploadedBy(): BelongsTo

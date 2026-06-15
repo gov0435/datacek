@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\App\Resources\BeritaAcara;
+namespace App\Filament\App\Resources\Sptjm;
 
-use App\Filament\App\Resources\BeritaAcara\Pages\ListBeritaAcaras;
-use App\Filament\App\Resources\BeritaAcara\Tables\BeritaAcarasTable;
-use App\Models\BeritaAcaraSekolah;
+use App\Filament\App\Resources\Sptjm\Pages\ListSptjms;
+use App\Filament\App\Resources\Sptjm\Tables\SptjmsTable;
+use App\Models\SptjmSekolah;
 use App\Models\User;
 use App\Models\Whitelist;
 use BackedEnum;
@@ -14,19 +14,19 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-class BeritaAcaraResource extends Resource
+class SptjmResource extends Resource
 {
-    protected static ?string $slug = 'berita-acara';
+    protected static ?string $slug = 'sptjm';
 
-    protected static ?string $model = BeritaAcaraSekolah::class;
+    protected static ?string $model = SptjmSekolah::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentArrowUp;
 
-    protected static ?string $navigationLabel = 'Berita Acara';
+    protected static ?string $navigationLabel = 'SPTJM';
 
     public static function table(Table $table): Table
     {
-        return BeritaAcarasTable::configure($table);
+        return SptjmsTable::configure($table);
     }
 
     public static function getEloquentQuery(): Builder
@@ -123,7 +123,7 @@ class BeritaAcaraResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListBeritaAcaras::route('/'),
+            'index' => ListSptjms::route('/'),
         ];
     }
 }

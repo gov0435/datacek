@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Filament\Resources\BeritaAcaraSekolahs;
+namespace App\Filament\Resources\SptjmSekolahs;
 
-use App\Filament\Resources\BeritaAcaraSekolahs\Pages\ListBeritaAcaraSekolahs;
-use App\Filament\Resources\BeritaAcaraSekolahs\Tables\BeritaAcaraSekolahsTable;
-use App\Models\BeritaAcaraSekolah;
+use App\Filament\Resources\SptjmSekolahs\Pages\ListSptjmSekolahs;
+use App\Filament\Resources\SptjmSekolahs\Tables\SptjmSekolahsTable;
+use App\Models\SptjmSekolah;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class BeritaAcaraSekolahResource extends Resource
+class SptjmSekolahResource extends Resource
 {
-    protected static ?string $model = BeritaAcaraSekolah::class;
+    protected static ?string $model = SptjmSekolah::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static ?string $navigationLabel = 'Berita Acara Sekolah';
+    protected static ?string $navigationLabel = 'SPTJM Sekolah';
 
     protected static ?string $recordTitleAttribute = 'sekolah_npsn';
 
@@ -24,7 +24,7 @@ class BeritaAcaraSekolahResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return BeritaAcaraSekolahsTable::configure($table);
+        return SptjmSekolahsTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -35,7 +35,7 @@ class BeritaAcaraSekolahResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListBeritaAcaraSekolahs::route('/'),
+            'index' => ListSptjmSekolahs::route('/'),
         ];
     }
 }

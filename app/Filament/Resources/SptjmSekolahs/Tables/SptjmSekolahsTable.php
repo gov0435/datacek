@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\BeritaAcaraSekolahs\Tables;
+namespace App\Filament\Resources\SptjmSekolahs\Tables;
 
 use App\Enums\KabKota;
-use App\Models\BeritaAcaraSekolah;
-use App\Models\BeritaAcaraUnggahan;
+use App\Models\SptjmSekolah;
+use App\Models\SptjmUnggahan;
 use App\Models\SurveyPpg;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
-class BeritaAcaraSekolahsTable
+class SptjmSekolahsTable
 {
     private const JENJANG_KAB_KOTA = ['PAUD', 'SD', 'SMP', 'Lainnya'];
 
@@ -46,9 +46,9 @@ class BeritaAcaraSekolahsTable
                     ->sortable()
                     ->alignRight(),
                 TextColumn::make('unggahanValid.is_valid')
-                    ->label('Status BA')
+                    ->label('Status SPTJM')
                     ->badge()
-                    ->state(fn (BeritaAcaraSekolah $record): string => static::getStatusBa($record))
+                    ->state(fn (SptjmSekolah $record): string => static::getStatusSptjm($record))
                     ->color(fn (string $state): string => match ($state) {
                         'Valid' => 'success',
                         'Pending' => 'warning',
@@ -61,7 +61,7 @@ class BeritaAcaraSekolahsTable
                     ->tooltip(fn ($state): ?string => $state && $state !== '-' ? $state : null)
                     ->icon(fn ($state): ?string => $state && $state !== '-' ? 'heroicon-o-arrow-down-tray' : null)
                     ->color(fn ($state): ?string => $state && $state !== '-' ? 'primary' : null)
-                    ->url(function (BeritaAcaraSekolah $record): ?string {
+                    ->url(function (SptjmSekolah $record): ?string {
                         $unggahan = $record->unggahanValid;
 
                         if ($unggahan === null) {
@@ -107,8 +107,8 @@ class BeritaAcaraSekolahsTable
                         'kabkota' => 'Kab/Kota',
                         'provinsi' => 'Provinsi',
                     ]),
-                SelectFilter::make('status_ba')
-                    ->label('Status BA')
+                SelectFilter::make('status_sptjm')
+                    ->label('Status SPTJM')
                     ->options([
                         'belum' => 'Belum Diupload',
                         'pending' => 'Pending',
@@ -133,7 +133,7 @@ class BeritaAcaraSekolahsTable
             ->toolbarActions([]);
     }
 
-    private static function getStatusBa(BeritaAcaraSekolah $record): string
+    private static function getStatusSptjm(SptjmSekolah $record): string
     {
         $unggahan = $record->relationLoaded('unggahanValid') ? $record->unggahanValid : $record->unggahanValid()->first();
 
@@ -189,7 +189,7 @@ class BeritaAcaraSekolahsTable
             'updated_at' => now(),
         ])->all();
 
-        BeritaAcaraSekolah::query()->upsert(
+        SptjmSekolah::query()->upsert(
             $payload,
             uniqueBy: ['sekolah_npsn'],
             update: ['sekolah_nama', 'sekolah_jenjang', 'sekolah_kota', 'sekolah_propinsi', 'jumlah_guru', 'updated_at'],
@@ -197,7 +197,7 @@ class BeritaAcaraSekolahsTable
 
         $npsnInResult = $rows->pluck('sekolah_npsn');
 
-        $toDelete = BeritaAcaraSekolah::query()
+        $toDelete = SptjmSekolah::query()
             ->when($scopeProvinsi, fn ($q) => $q->whereIn('sekolah_jenjang', self::JENJANG_PROVINSI))
             ->unless($scopeProvinsi, fn ($q) => $q
                 ->where('sekolah_kota', $kabkotaValue)
@@ -210,11 +210,11 @@ class BeritaAcaraSekolahsTable
         $deleted = 0;
 
         if ($toDelete->isNotEmpty()) {
-            BeritaAcaraUnggahan::query()
-                ->whereIn('berita_acara_sekolah_id', $toDelete)
+            SptjmUnggahan::query()
+                ->whereIn('sptjm_sekolah_id', $toDelete)
                 ->delete();
 
-            $deleted = BeritaAcaraSekolah::query()
+            $deleted = SptjmSekolah::query()
                 ->whereIn('id', $toDelete)
                 ->delete();
         }

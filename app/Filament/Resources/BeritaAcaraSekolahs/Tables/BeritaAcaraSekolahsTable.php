@@ -4,6 +4,7 @@ namespace App\Filament\Resources\BeritaAcaraSekolahs\Tables;
 
 use App\Enums\KabKota;
 use App\Models\BeritaAcaraSekolah;
+use App\Models\BeritaAcaraUnggahan;
 use App\Models\SurveyPpg;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
@@ -13,6 +14,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class BeritaAcaraSekolahsTable
 {
@@ -54,7 +56,22 @@ class BeritaAcaraSekolahsTable
                     }),
                 TextColumn::make('unggahanValid.file_name')
                     ->label('File')
-                    ->default('-'),
+                    ->default('-')
+                    ->wrap()
+                    ->tooltip(fn ($state): ?string => $state && $state !== '-' ? $state : null)
+                    ->icon(fn ($state): ?string => $state && $state !== '-' ? 'heroicon-o-arrow-down-tray' : null)
+                    ->color(fn ($state): ?string => $state && $state !== '-' ? 'primary' : null)
+                    ->url(function (BeritaAcaraSekolah $record): ?string {
+                        $unggahan = $record->unggahanValid;
+
+                        if ($unggahan === null) {
+                            return null;
+                        }
+
+                        return Storage::disk($unggahan->disk)
+                            ->temporaryUrl($unggahan->file_path, now()->addMinutes(60));
+                    })
+                    ->openUrlInNewTab(),
                 TextColumn::make('unggahanValid.updated_at')
                     ->label('Tgl Upload')
                     ->dateTime('d M Y H:i')
@@ -178,8 +195,32 @@ class BeritaAcaraSekolahsTable
             update: ['sekolah_nama', 'sekolah_jenjang', 'sekolah_kota', 'sekolah_propinsi', 'jumlah_guru', 'updated_at'],
         );
 
+        $npsnInResult = $rows->pluck('sekolah_npsn');
+
+        $toDelete = BeritaAcaraSekolah::query()
+            ->when($scopeProvinsi, fn ($q) => $q->whereIn('sekolah_jenjang', self::JENJANG_PROVINSI))
+            ->unless($scopeProvinsi, fn ($q) => $q
+                ->where('sekolah_kota', $kabkotaValue)
+                ->whereIn('sekolah_jenjang', self::JENJANG_KAB_KOTA)
+            )
+            ->whereNotIn('sekolah_npsn', $npsnInResult)
+            ->where('jumlah_guru', '>', 0)
+            ->pluck('id');
+
+        $deleted = 0;
+
+        if ($toDelete->isNotEmpty()) {
+            BeritaAcaraUnggahan::query()
+                ->whereIn('berita_acara_sekolah_id', $toDelete)
+                ->delete();
+
+            $deleted = BeritaAcaraSekolah::query()
+                ->whereIn('id', $toDelete)
+                ->delete();
+        }
+
         Notification::make()
-            ->title("Generate selesai: {$rows->count()} sekolah diproses")
+            ->title('Generate selesai: '.$rows->count().' sekolah diproses'.($deleted ? ', '.$deleted.' sekolah dihapus (semua guru Berminat)' : ''))
             ->success()
             ->send();
     }

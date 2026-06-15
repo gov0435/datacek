@@ -2,7 +2,7 @@
 
 Fitur baru:
 1. **Role `kgtk`** pada panel App.
-2. **Admin** punya tombol **Generate Data Sekolah** (per Kabupaten/Kota / Provinsi) yang meng-query sekolah dengan guru `potensi_status != Berminat` lalu **insert** baris baru ke `berita_acara_sekolah` (idempotent — data lama tidak terdampak).
+2. **Admin** punya tombol **Generate Data Sekolah** (per Kabupaten/Kota / Provinsi) yang meng-query sekolah dengan guru `potensi_status != Berminat` lalu **upsert** ke `berita_acara_sekolah`. Sekolah yang sudah tidak punya guru non-Berminat (semua Berminat) **dihapus** berikut riwayat uploadnya.
 3. **kgtk** meng-upload **Berita Acara per sekolah** ke **S3**, boleh **banyak versi** (riwayat disimpan), dengan **satu flag** penanda file valid terakhir.
 4. **kgtk** juga meng-upload **Dokumen Dinas (per dinas/wilayah, bukan per sekolah)** ke **S3** — versioning & flag valid yang sama, mendukung beberapa **jenis** dokumen dinas.
 
@@ -232,7 +232,7 @@ Action::make('generateSekolah')
 
         // UPSERT by sekolah_npsn:
         //  - npsn baru  -> insert
-        //  - npsn lama  -> REFRESH jumlah_guru + denormalisasi (uploads TIDAK tersentuh)
+        //  - npsn lama  -> REFRESH jumlah_guru + denormalisasi
         $payload = $rows->map(fn ($r) => [
             'sekolah_npsn'     => $r->sekolah_npsn,
             'sekolah_nama'     => $r->sekolah_nama,
@@ -252,15 +252,40 @@ Action::make('generateSekolah')
             update: ['sekolah_nama', 'sekolah_jenjang', 'sekolah_kota', 'sekolah_propinsi', 'jumlah_guru', 'updated_at'],
         );
 
+        // HAPUS sekolah yg sudah tidak punya guru non-Berminat (ikut hapus riwayat upload)
+        $npsnInResult = $rows->pluck('sekolah_npsn');
+
+        $toDelete = BeritaAcaraSekolah::query()
+            ->when($scopeProvinsi, fn ($q) => $q->whereIn('sekolah_jenjang', self::JENJANG_PROVINSI))
+            ->unless($scopeProvinsi, fn ($q) => $q
+                ->where('sekolah_kota', $kabkotaValue)
+                ->whereIn('sekolah_jenjang', self::JENJANG_KAB_KOTA)
+            )
+            ->whereNotIn('sekolah_npsn', $npsnInResult)
+            ->where('jumlah_guru', '>', 0)
+            ->pluck('id');
+
+        $deleted = 0;
+
+        if ($toDelete->isNotEmpty()) {
+            BeritaAcaraUnggahan::query()
+                ->whereIn('berita_acara_sekolah_id', $toDelete)
+                ->delete();
+
+            $deleted = BeritaAcaraSekolah::query()
+                ->whereIn('id', $toDelete)
+                ->delete();
+        }
+
         Notification::make()
-            ->title("Generate selesai: {$rows->count()} sekolah diproses")
+            ->title('Generate selesai: '.$rows->count().' sekolah diproses'.($deleted ? ', '.$deleted.' sekolah dihapus (semua guru Berminat)' : ''))
             ->success()->send();
     });
 ```
 
 **Sifat penting:**
-- **npsn baru** → di-insert; **npsn lama** → hanya `jumlah_guru` + kolom denormalisasi yang **di-refresh** (sesuai permintaan).
-- Tabel **`berita_acara_unggahan` tidak tersentuh sama sekali** → semua file & riwayat BA yang sudah diupload aman.
+- **npsn baru** → di-insert; **npsn lama** → `jumlah_guru` + kolom denormalisasi **di-refresh**.
+- **Sekolah yang sudah tidak punya guru non-Berminat (semua Berminat)** → record sekolah **&** riwayat upload (`berita_acara_unggahan`) **dihapus** dari DB. File di S3 tetap (tidak dihapus).
 - `upsert` PostgreSQL butuh **unique constraint** pada `sekolah_npsn` (sudah ada di migrasi §4.1).
 
 > Catatan performa: 6 kab/kota, ≤~350 sekolah/kota → aman dengan satu query agregasi + satu `insert` bulk.
@@ -343,7 +368,8 @@ Gunakan `Storage::fake('s3')` + factory. `php artisan make:test --pest ...`.
    - hanya sekolah dengan guru `IS DISTINCT FROM 'Berminat'` yang ter-insert;
    - jenjang sesuai scope (kab/kota vs provinsi);
    - **idempotent (upsert)**: generate dua kali tidak menduplikasi `sekolah_npsn`;
-   - **`jumlah_guru` di-refresh** untuk sekolah lama saat re-generate, **tanpa** menyentuh `berita_acara_unggahan` (file BA tetap utuh);
+   - **`jumlah_guru` di-refresh** untuk sekolah lama saat re-generate;
+   - **sekolah yg semua gurunya sudah Berminat** → record sekolah & riwayat upload dihapus dari DB (file S3 tetap);
    - sekolah yang baru memenuhi syarat (NULL → terisi) ikut masuk saat re-generate.
 3. **Scope kgtk**: kgtk kab/kota hanya melihat sekolah di kabkota whitelist-nya; kgtk provinsi melihat sekolah jenjang SLB/SMA/SMK se-provinsi.
 4. **Role**: kgtk lihat resource BA **dan** Data Keberminatan; member tidak melihat BA.
@@ -381,7 +407,7 @@ Jalankan: `php artisan test --compact --filter=BeritaAcara` dan `--filter=Dokume
 2. **kgtk boleh melihat Data Keberminatan** + Berita Acara (tidak ada pembatasan pada `DataKeberminatanResource`).
 3. **kgtk ada 2 level**: kab/kota **dan** provinsi — scope mengikuti `Whitelist.kabkota` (nilai `Provinsi` → scope provinsi), reuse logika `DataKeberminatanResource`.
 4. **Versi valid** = **upload terakhir otomatis valid**; kolom `is_valid` tetap ada sebagai penanda. Tanpa aksi "tandai valid" manual.
-5. **`jumlah_guru` di-refresh** saat re-generate (upsert), tetapi `berita_acara_unggahan` tidak tersentuh. Tidak perlu audit trail (project sementara, fokus periode ini).
+5. **`jumlah_guru` di-refresh** saat re-generate (upsert). Sekolah yang semua gurunya sudah Berminat **dihapus** dari DB (termasuk riwayat upload) — file S3 tetap.
 6. **File BA** = **PDF saja**, ukuran maksimal **25 MB** (`acceptedFileTypes(['application/pdf'])`, `maxSize(25600)`).
 7. **Dokumen Dinas** = tabel `dokumen_dinas` terpisah, per wilayah (`kabkota`/`provinsi`) & per `jenis`, versioning + flag valid yang sama, PDF maks 25 MB, tanpa generate admin.
 8. **Status badge** = **3-state**: `Belum Diupload` | `Pending` | `Valid` (untuk BA dan Dokumen Dinas).

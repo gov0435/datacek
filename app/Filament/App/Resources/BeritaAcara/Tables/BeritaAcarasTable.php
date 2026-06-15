@@ -130,7 +130,7 @@ class BeritaAcarasTable
 
                 Section::make('Upload Berita Acara')
                     ->afterHeader(fn (BeritaAcaraSekolah $record): array => ($unggahan = $record->unggahanValid()->first()) ? [
-                        
+
                         Action::make('downloadLatest')
                             ->label('Unduh PDF')
                             ->icon('heroicon-o-arrow-down-tray')

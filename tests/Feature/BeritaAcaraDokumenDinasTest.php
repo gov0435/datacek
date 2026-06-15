@@ -17,8 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 // ============================================================================
 test('jenis dokumen dinas enum has correct values', function () {
     expect(JenisDokumenDinas::cases())->toHaveCount(2)
-        ->and(JenisDokumenDinas::BeritaAcara->value)->toBe('Berita Acara')
-        ->and(JenisDokumenDinas::DokumenLain->value)->toBe('Dokumen Lain');
+        ->and(JenisDokumenDinas::BeritaAcara->value)->toBe('berita_acara')
+        ->and(JenisDokumenDinas::DokumenLain->value)->toBe('dokumen_lain');
 });
 
 // ============================================================================

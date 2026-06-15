@@ -14,7 +14,7 @@ class DokumenDinasFactory extends Factory
     {
         return [
             'kabkota' => fake()->randomElement(['Kab. Gorontalo', 'Kota Gorontalo', 'Provinsi']),
-            'jenis' => fake()->randomElement(['Berita Acara', 'Dokumen Lain']),
+            'jenis' => fake()->randomElement(['berita_acara', 'dokumen_lain']),
             'disk' => 's3',
             'file_path' => 'dokumen-dinas/'.fake()->uuid().'.pdf',
             'file_name' => fake()->word().'.pdf',

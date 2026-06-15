@@ -6,11 +6,14 @@ use Filament\Support\Contracts\HasLabel;
 
 enum JenisDokumenDinas: string implements HasLabel
 {
-    case BeritaAcara = 'Berita Acara';
-    case DokumenLain = 'Dokumen Lain';
+    case BeritaAcara = 'berita_acara';
+    case DokumenLain = 'dokumen_lain';
 
     public function getLabel(): string
     {
-        return $this->value;
+        return match ($this) {
+            self::BeritaAcara => 'Berita Acara',
+            self::DokumenLain => 'Dokumen Lain',
+        };
     }
 }

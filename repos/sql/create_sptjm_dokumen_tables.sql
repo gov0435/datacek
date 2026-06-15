@@ -1,14 +1,19 @@
--- Neon PostgreSQL: Tabel untuk Berita Acara Sekolah & Dokumen Dinas
+-- Neon PostgreSQL: Tabel untuk SPTJM Sekolah, Berita Acara Dinas & Dokumen Dinas
 -- Jalankan di Neon SQL Editor / psql.
--- Includes: berita_acara_sekolah, berita_acara_unggahan, dokumen_dinas, alter whitelists.role
+-- Includes: sptjm_sekolah, sptjm_unggahan, dokumen_dinas, alter whitelists.role
+--
+-- Domain:
+--   SPTJM (Surat Pernyataan Tanggung Jawab Mutlak) → per sekolah
+--   Berita Acara → per dinas/wilayah (menggunakan dokumen_dinas dengan jenis = 'Berita Acara')
 
 -- ============================================================================
--- 1. CREATE berita_acara_sekolah (master per sekolah)
+-- 1. CREATE sptjm_sekolah (master per sekolah)
 -- ============================================================================
 
-DROP TABLE IF EXISTS berita_acara_sekolah CASCADE;
+DROP TABLE IF EXISTS sptjm_unggahan CASCADE;
+DROP TABLE IF EXISTS sptjm_sekolah CASCADE;
 
-CREATE TABLE berita_acara_sekolah (
+CREATE TABLE sptjm_sekolah (
     id BIGSERIAL PRIMARY KEY,
     sekolah_npsn VARCHAR(255) NOT NULL UNIQUE,
     sekolah_nama VARCHAR(255),
@@ -16,25 +21,23 @@ CREATE TABLE berita_acara_sekolah (
     sekolah_kota VARCHAR(255),
     sekolah_propinsi VARCHAR(255),
     scope VARCHAR(50),                          -- 'kabkota' atau 'provinsi'
-    jumlah_guru INTEGER UNSIGNED DEFAULT 0,    -- snapshot jumlah guru non-Berminat saat generate
+    jumlah_guru INTEGER DEFAULT 0,             -- snapshot jumlah guru non-Berminat saat generate
     generated_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_berita_acara_sekolah_npsn ON berita_acara_sekolah(sekolah_npsn);
-CREATE INDEX idx_berita_acara_sekolah_kota ON berita_acara_sekolah(sekolah_kota);
-CREATE INDEX idx_berita_acara_sekolah_propinsi ON berita_acara_sekolah(sekolah_propinsi);
+CREATE INDEX idx_sptjm_sekolah_npsn ON sptjm_sekolah(sekolah_npsn);
+CREATE INDEX idx_sptjm_sekolah_kota ON sptjm_sekolah(sekolah_kota);
+CREATE INDEX idx_sptjm_sekolah_propinsi ON sptjm_sekolah(sekolah_propinsi);
 
 -- ============================================================================
--- 2. CREATE berita_acara_unggahan (riwayat file versioned)
+-- 2. CREATE sptjm_unggahan (riwayat file versioned)
 -- ============================================================================
 
-DROP TABLE IF EXISTS berita_acara_unggahan CASCADE;
-
-CREATE TABLE berita_acara_unggahan (
+CREATE TABLE sptjm_unggahan (
     id BIGSERIAL PRIMARY KEY,
-    berita_acara_sekolah_id BIGINT NOT NULL REFERENCES berita_acara_sekolah(id) ON DELETE CASCADE,
+    sptjm_sekolah_id BIGINT NOT NULL REFERENCES sptjm_sekolah(id) ON DELETE CASCADE,
     disk VARCHAR(255) DEFAULT 's3',
     file_path VARCHAR(255) NOT NULL,            -- object key di S3
     file_name VARCHAR(255) NOT NULL,            -- nama asli file
@@ -47,10 +50,12 @@ CREATE TABLE berita_acara_unggahan (
     updated_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_berita_acara_unggahan_sekolah_valid ON berita_acara_unggahan(berita_acara_sekolah_id, is_valid);
+CREATE INDEX idx_sptjm_unggahan_sekolah_valid ON sptjm_unggahan(sptjm_sekolah_id, is_valid);
 
 -- ============================================================================
--- 3. CREATE dokumen_dinas (dokumen tingkat dinas, versioned per jenis)
+-- 3. CREATE dokumen_dinas (Berita Acara & dokumen tingkat dinas lainnya)
+--    Berita Acara → disimpan sebagai record dokumen_dinas dengan jenis = 'berita_acara'
+--    (BUKAN menggunakan tabel sekolah/SPTJM)
 -- ============================================================================
 
 DROP TABLE IF EXISTS dokumen_dinas CASCADE;
@@ -58,7 +63,7 @@ DROP TABLE IF EXISTS dokumen_dinas CASCADE;
 CREATE TABLE dokumen_dinas (
     id BIGSERIAL PRIMARY KEY,
     kabkota VARCHAR(255) NOT NULL,              -- scope dinas (value KabKota enum, incl. 'Provinsi')
-    jenis VARCHAR(255) NOT NULL,                -- jenis dokumen: 'BeritaAcara', 'DokumenLain'
+    jenis VARCHAR(255) NOT NULL,                -- jenis dokumen: 'berita_acara', 'dokumen_lain'
     disk VARCHAR(255) DEFAULT 's3',
     file_path VARCHAR(255) NOT NULL,            -- object key di S3
     file_name VARCHAR(255) NOT NULL,            -- nama asli file

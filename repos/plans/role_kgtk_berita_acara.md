@@ -95,7 +95,7 @@ Nilai `sekolah_kota` di DB **persis sama** dengan value enum (`Kab. Gorontalo`, 
 S3 disk sudah terdaftar di [`config/filesystems.php`](../../config/filesystems.php) **tetapi paket belum terpasang**.
 Target: **S3-compatible** (bukan AWS asli) → wajib set `AWS_ENDPOINT` dan umumnya `AWS_USE_PATH_STYLE_ENDPOINT=true`.
 
-1. **Tambah dependency** (butuh approval): `composer require league/flysystem-aws-s3-v3 "^3.0"`.
+1. **Tambah dependency** (butuh approval): `composer require league/flysystem-aws-s3-v3 "^3.34"`.
 2. **Tambah env** di `.env` & [`.env.example`](../../.env.example):
    ```
    AWS_ACCESS_KEY_ID=
@@ -369,7 +369,7 @@ Resource `app/Filament/App/Resources/DokumenDinas/` (panel App). Berbeda dari Be
 
 ## 8. Testing (Pest — wajib)
 
-Gunakan `Storage::fake('s3')` + factory. Test file: `tests/Feature/SptjmDokumenDinasTest.php` (baru, menggantikan `BeritaAcaraDokumenDinasTest.php`).
+Gunakan `Storage::fake('s3')` + factory. Test file: `tests/Feature/SptjmDokumenDinasTest.php`.
 
 1. **Migrasi & model**: tabel `sptjm_sekolah`, `sptjm_unggahan`, `dokumen_dinas` exist + `whitelists.role` column added; relasi `SptjmSekolah ↔ unggahan`, `unggahanValid()` benar.
 2. **Generate (admin)**:

@@ -25,8 +25,9 @@ class RegistrationStatsWidget extends BaseWidget
         // Base query with scope filter
         $query = SurveyPpg::query()->where('has_potensi', true);
 
-        // Check if user is provinsi scope
-        if ($this->isProvinsiScope()) {
+        if ($kabKota === null) {
+            // Admin tanpa whitelist — lihat semua data tanpa filter
+        } elseif ($this->isProvinsiScope()) {
             // Filter by jenjang provinsi
             $query->whereIn('sekolah_jenjang', self::JENJANG_PROVINSI);
         } else {
@@ -64,7 +65,7 @@ class RegistrationStatsWidget extends BaseWidget
 
         return [
             Stat::make('Total', $totalCount)
-                ->description('Guru di '.$kabKota)
+                ->description($kabKota ? 'Guru di '.$kabKota : 'Seluruh Guru')
                 ->descriptionIcon('heroicon-m-users')
                 ->color('warning'),
 

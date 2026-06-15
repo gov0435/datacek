@@ -162,7 +162,7 @@ class SptjmsTable
                     ])
                     ->compact(),
 
-                Section::make('Daftar Guru Non-Berminat')
+                Section::make('Daftar Guru Tidak Berminat PPG, Sedang PPG, Sudah Serdik')
                     ->schema([
                         RepeatableEntry::make('daftar_guru')
                             ->state(fn (SptjmSekolah $record): array => $record->sekolah_npsn

@@ -80,11 +80,11 @@ Nilai `sekolah_kota` di DB **persis sama** dengan value enum (`Kab. Gorontalo`, 
 - `dokumen_dinas` — **dokumen tingkat dinas** (per wilayah `kabkota`/`provinsi`, bukan per sekolah). N versi per (`kabkota`, `jenis`); kolom `is_valid` menandai file valid terakhir, riwayat disimpan. **Tidak butuh generate** — kgtk upload langsung.
 
 ```diagram
-                    APP PANEL (role kgtk)
+                     APP PANEL (role kgtk)
  ╭──────────────────────────────────────────╮
  │ DokumenDinasResource                       │
  │  ── upload per JENIS dokumen (scope dinas) │──▶ dokumen_dinas (versioned, is_valid)
- │  ── tanpa generate admin                   │      └─▶ S3: dokumen-dinas/{kabkota}/{jenis}/...
+ │  ── tanpa generate admin                   │      └─▶ S3: ppg/dokumen-dinas/{kabkota}/{jenis}/...
  ╰──────────────────────────────────────────╯
 ```
 
@@ -138,7 +138,7 @@ Index: `unique('sekolah_npsn')`, index `sekolah_kota`, `sekolah_propinsi`.
 | Kolom | Tipe | Keterangan |
 |---|---|---|
 | `id` | `bigIncrements` | PK |
-| `sptjm_sekolah_id` | `foreignId` → `sptjm_sekolah.id` cascade | relasi master |
+| `sptjm_sekolah_id` | `foreignId` → `sptjm_sekolah.id` ON DELETE CASCADE | relasi master |
 | `disk` | `string` default `s3` | |
 | `file_path` | `string` | object key di S3 |
 | `file_name` | `string` | nama asli file |
@@ -200,8 +200,8 @@ Resource baru `app/Filament/Resources/SptjmSekolahs/` (panel admin, pola folder 
 
 ### 5.1 Tabel
 Kolom: `sekolah_npsn`, `sekolah_nama`, `sekolah_jenjang` (badge), `sekolah_kota`, `jumlah_guru`,
-`status_ba` (badge dari relasi `unggahanValid`: **Sudah Valid / Belum Upload**), `unggahanValid.updated_at`.
-Filter: `sekolah_kota`, `scope`, dan `status_ba` (sudah/belum).
+`status_sptjm` (badge dari relasi `unggahanValid`: **Sudah Valid / Belum Upload**), `unggahanValid.updated_at`.
+Filter: `sekolah_kota`, `scope`, dan `status_sptjm` (sudah/belum).
 
 ### 5.2 Header Action: `generateSekolah`
 ```php
@@ -260,6 +260,7 @@ Action::make('generateSekolah')
 
         // HAPUS sekolah yg sudah tidak punya guru non-Berminat (ikut hapus riwayat upload)
         $npsnInResult = $rows->pluck('sekolah_npsn');
+        $kabkotaValue = $data['kabkota'];
 
         $toDelete = SptjmSekolah::query()
             ->when($scopeProvinsi, fn ($q) => $q->whereIn('sekolah_jenjang', self::JENJANG_PROVINSI))
@@ -318,7 +319,7 @@ Resource `app/Filament/App/Resources/Sptjm/` (pola sama `DataKeberminatan`).
   - **Informasi Sekolah** (NPSN, nama, jenjang, kab/kota, jumlah guru) — read-only.
   - **Daftar Guru Non-Berminat** — tabel read-only, dari `survey_ppg` (nama, no HP, status, alasan).
   - **Upload SPTJM** — form dengan:
-    - `FileUpload::make('file')->disk('s3')->visibility('private')->directory("sptjm/{npsn}")->acceptedFileTypes(['application/pdf'])->maxSize(25000)` (**PDF only, maks 25 MB** = 25.000 KB) + `FileHelper::generateUniqueFileName()`.
+    - `FileUpload::make('file')->disk('s3')->visibility('private')->directory("sptjm/{npsn}")->acceptedFileTypes(['application/pdf'])->maxSize(25600)` (**PDF only, maks 25 MB**) + `FileHelper::generateUniqueFileName()`.
     - `Textarea::make('catatan')` opsional.
     - `->action()` dalam `DB::transaction`:
       1. `update` semua unggahan sekolah tsb `is_valid=false`;
@@ -341,9 +342,10 @@ Resource `app/Filament/App/Resources/DokumenDinas/` (panel App). Berbeda dari Be
 **per wilayah dinas (bukan per sekolah)** & **tanpa generate admin**.
 
 ### 7.1 Sumber baris & scope
-- Baris = **dokumen valid** per wilayah dinas si kgtk.
-  - **Query sederhana**: `WHERE kabkota = ? AND is_valid = true` — tampil hanya dokumen yang sudah valid.
-  - Upload dokumen baru → via **header action** dengan dropdown enum `jenis`, tidak perlu pre-show semua jenis di tabel.
+- **Tabel menampilkan dokumen valid per jenis** per wilayah dinas si kgtk:
+  - `WHERE kabkota = ? AND is_valid = true` — hanya versi valid terbaru per jenis.
+  - **Riwayat versi** (termasuk yang invalid) diakses via **Record Action "Riwayat Versi"** (§ 7.3).
+  - Upload dokumen baru → via **header action** dengan dropdown enum `jenis`.
 - **Scope** = `kabkota` dari `Whitelist` user (reuse helper `DataKeberminatanResource`). kgtk hanya melihat/upload dokumen untuk wilayahnya sendiri.
 
 ### 7.2 Kolom
@@ -367,9 +369,9 @@ Resource `app/Filament/App/Resources/DokumenDinas/` (panel App). Berbeda dari Be
 
 ## 8. Testing (Pest — wajib)
 
-Gunakan `Storage::fake('s3')` + factory. `php artisan make:test --pest ...`.
+Gunakan `Storage::fake('s3')` + factory. Test file: `tests/Feature/SptjmDokumenDinasTest.php` (baru, menggantikan `BeritaAcaraDokumenDinasTest.php`).
 
-1. **Migrasi & model**: 4 migrasi jalan (`sptjm_sekolah`, `sptjm_unggahan`, `dokumen_dinas`, `whitelists.role`); relasi `SptjmSekolah ↔ unggahan`, `unggahanValid` benar.
+1. **Migrasi & model**: tabel `sptjm_sekolah`, `sptjm_unggahan`, `dokumen_dinas` exist + `whitelists.role` column added; relasi `SptjmSekolah ↔ unggahan`, `unggahanValid()` benar.
 2. **Generate (admin)**:
    - hanya sekolah dengan guru `IS DISTINCT FROM 'Berminat'` yang ter-insert;
    - jenjang sesuai scope (kab/kota vs provinsi);
@@ -378,7 +380,7 @@ Gunakan `Storage::fake('s3')` + factory. `php artisan make:test --pest ...`.
    - **sekolah yg semua gurunya sudah Berminat** → record sekolah & riwayat upload dihapus dari DB (file S3 tetap);
    - sekolah yang baru memenuhi syarat (NULL → terisi) ikut masuk saat re-generate.
 3. **Scope kgtk**: kgtk kab/kota hanya melihat sekolah di kabkota whitelist-nya; kgtk provinsi melihat sekolah jenjang SLB/SMA/SMK se-provinsi.
-4. **Role**: kgtk lihat resource BA **dan** Data Keberminatan; member tidak melihat BA.
+4. **Role**: kgtk lihat resource SPTJM **dan** Data Keberminatan; member tidak melihat SPTJM.
 5. **SlideOver Detail**:
    - detail panel membuka dengan slideOver (kanan);
    - info sekolah, guru list, dan upload form dalam satu panel;
@@ -391,7 +393,7 @@ Gunakan `Storage::fake('s3')` + factory. `php artisan make:test --pest ...`.
    - upload kedua jenis sama → versi lama `is_valid=false` & tetap ada, baru `is_valid=true`;
    - scope: kgtk hanya melihat/upload dokumen untuk `kabkota`-nya sendiri.
 
-Jalankan: `php artisan test --compact --filter=BeritaAcaraDokumenDinas`.
+Jalankan: `php artisan test --compact --filter=SptjmDokumenDinas`.
 
 ---
 
@@ -399,12 +401,12 @@ Jalankan: `php artisan test --compact --filter=BeritaAcaraDokumenDinas`.
 
 1. (Approval) `composer require league/flysystem-aws-s3-v3`; tambah env S3.
 2. Execute SQL schema di Neon (`repos/sql/create_sptjm_dokumen_tables.sql`) → tabel `sptjm_sekolah`, `sptjm_unggahan`, `dokumen_dinas`, alter `whitelists`.
-3. Create Laravel Models + factory + enum `JenisDokumenDinas`.
-4. `User` helper role; `SocialAuthController` role dari whitelist; `WhitelistForm` Select role.
+3. Create Laravel Models (`SptjmSekolah`, `SptjmUnggahan`, `DokumenDinas`) + factories + enum `JenisDokumenDinas`.
+4. `User` helper role (`isKgtk()`, `isMember()`); `SocialAuthController` role dari whitelist; `WhitelistForm` Select role.
 5. Admin `SptjmSekolahResource` + header action `generateSekolah`.
 6. App `SptjmResource` (scope kgtk) + aksi upload/riwayat/unduh + gating.
 7. App `DokumenDinasResource` (scope kgtk) + aksi upload/riwayat/unduh.
-8. Test Pest; `vendor/bin/pint --dirty --format agent`.
+8. Test Pest (`SptjmDokumenDinasTest`); `vendor/bin/pint --dirty --format agent`.
 
 ---
 

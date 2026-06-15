@@ -51,12 +51,12 @@ class SptjmResource extends Resource
 
     public static function canViewAny(): bool
     {
-        return Auth::user()?->isKgtk() ?? false;
+        return Auth::user()?->isKgtk() || Auth::user()?->isMember();
     }
 
     public static function shouldRegisterNavigation(): bool
     {
-        return Auth::user()?->isKgtk() ?? false;
+        return Auth::user()?->isKgtk() || Auth::user()?->isMember();
     }
 
     public static function getWhitelistKabKotaHeading(): string

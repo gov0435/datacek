@@ -13,6 +13,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use UnitEnum;
 
 class DokumenDinasResource extends Resource
 {
@@ -23,6 +24,8 @@ class DokumenDinasResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolderArrowDown;
 
     protected static ?string $navigationLabel = 'Dokumen Dinas';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Upload Dokumen';
 
     public static function table(Table $table): Table
     {

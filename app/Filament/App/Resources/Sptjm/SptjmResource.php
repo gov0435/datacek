@@ -13,6 +13,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use UnitEnum;
 
 class SptjmResource extends Resource
 {
@@ -22,7 +23,9 @@ class SptjmResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentArrowUp;
 
-    protected static ?string $navigationLabel = 'SPTJM';
+    protected static ?string $navigationLabel = 'SPTJM Sekolah';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Upload Dokumen';
 
     public static function table(Table $table): Table
     {

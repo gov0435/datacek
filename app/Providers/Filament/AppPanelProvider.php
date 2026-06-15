@@ -65,6 +65,9 @@ class AppPanelProvider extends PanelProvider
             ])
             ->defaultThemeMode(ThemeMode::Light)
             ->topNavigation()
+            ->navigationGroups([
+                'Upload Dokumen',
+            ])
             ->authMiddleware([
                 Authenticate::class,
             ]);

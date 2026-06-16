@@ -45,7 +45,8 @@ class DokumenDinasTable
                 TextColumn::make('file_name')
                     ->label('File')
                     ->default('-')
-                    ->formatStateUsing(fn (?string $state): ?string => FileHelper::trimFileName($state)),
+                    ->formatStateUsing(fn (?string $state): ?string => FileHelper::trimFileName($state))
+                    ->tooltip(fn (DokumenDinas $record): ?string => $record->file_name),
                 TextColumn::make('updated_at')
                     ->label('Tgl Upload')
                     ->dateTime('d M Y H:i')

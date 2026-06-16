@@ -130,6 +130,6 @@ test('file helper trim file name trims correctly', function () {
         ->and(FileHelper::trimFileName(''))->toBeNull()
         ->and(FileHelper::trimFileName('short.pdf'))->toBe('short.pdf')
         ->and(FileHelper::trimFileName('1234567890.pdf'))->toBe('1234567890.pdf')
-        ->and(FileHelper::trimFileName('12345678901.pdf'))->toBe('....2345678901.pdf')
-        ->and(FileHelper::trimFileName('1704067200-document.pdf'))->toBe('....0-document.pdf');
+        ->and(FileHelper::trimFileName('12345678901.pdf'))->toBe('📄....2345678901.pdf')
+        ->and(FileHelper::trimFileName('1704067200-document.pdf'))->toBe('📄....0-document.pdf');
 });

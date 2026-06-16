@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\SptjmSekolahs\Tables;
 
 use App\Enums\KabKota;
+use App\Helpers\FileHelper;
 use App\Models\SptjmSekolah;
 use App\Models\SptjmUnggahan;
 use App\Models\SurveyPpg;
@@ -26,13 +27,11 @@ class SptjmSekolahsTable
     {
         return $table
             ->columns([
-                TextColumn::make('sekolah_npsn')
-                    ->label('NPSN')
-                    ->searchable()
-                    ->sortable(),
                 TextColumn::make('sekolah_nama')
                     ->label('Sekolah')
-                    ->searchable()
+                    ->description(fn (SptjmSekolah $record): string => 'NPSN: '.$record->sekolah_npsn)
+                    ->searchable(['sekolah_nama', 'sekolah_npsn'])
+                    ->sortable()
                     ->wrap(),
                 TextColumn::make('sekolah_jenjang')
                     ->label('Jenjang')
@@ -58,9 +57,10 @@ class SptjmSekolahsTable
                     ->label('File')
                     ->default('-')
                     ->wrap()
-                    ->tooltip(fn ($state): ?string => $state && $state !== '-' ? $state : null)
+                    ->tooltip(fn (SptjmSekolah $record): ?string => $record->unggahanValid?->file_name)
                     ->icon(fn ($state): ?string => $state && $state !== '-' ? 'heroicon-o-arrow-down-tray' : null)
                     ->color(fn ($state): ?string => $state && $state !== '-' ? 'primary' : null)
+                    ->formatStateUsing(fn (?string $state): ?string => FileHelper::trimFileName($state))
                     ->url(function (SptjmSekolah $record): ?string {
                         $unggahan = $record->unggahanValid;
 

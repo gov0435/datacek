@@ -44,4 +44,29 @@ class FileHelper
     {
         return time().'-'.self::cleanFileName($fileName);
     }
+
+    /**
+     * Trim file name to a specified length, keeping the suffix and extension.
+     *
+     *
+     * @example
+     * FileHelper::trimFileName('1704067200-document.pdf') // Returns: ....cument.pdf
+     */
+    public static function trimFileName(?string $fileName, int $length = 10): ?string
+    {
+        if (blank($fileName)) {
+            return null;
+        }
+
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $filename = pathinfo($fileName, PATHINFO_FILENAME);
+
+        if (mb_strlen($filename) <= $length) {
+            return $fileName;
+        }
+
+        $trimmed = mb_substr($filename, -$length);
+
+        return '📄....'.$trimmed.($extension ? '.'.$extension : '');
+    }
 }

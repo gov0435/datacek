@@ -4,6 +4,7 @@ use App\Enums\JenisDokumenDinas;
 use App\Filament\App\Resources\DokumenDinas\DokumenDinasResource;
 use App\Filament\App\Resources\Sptjm\SptjmResource;
 use App\Filament\Resources\SptjmSekolahs\SptjmSekolahResource;
+use App\Helpers\FileHelper;
 use App\Models\DokumenDinas;
 use App\Models\SptjmSekolah;
 use App\Models\SptjmUnggahan;
@@ -119,4 +120,16 @@ test('app sptjm resource is list only', function () {
 test('app dokumen dinas resource is list only', function () {
     expect(DokumenDinasResource::getModel())->toBe(DokumenDinas::class)
         ->and(array_keys(DokumenDinasResource::getPages()))->toBe(['index']);
+});
+
+// ============================================================================
+// FileHelper
+// ============================================================================
+test('file helper trim file name trims correctly', function () {
+    expect(FileHelper::trimFileName(null))->toBeNull()
+        ->and(FileHelper::trimFileName(''))->toBeNull()
+        ->and(FileHelper::trimFileName('short.pdf'))->toBe('short.pdf')
+        ->and(FileHelper::trimFileName('1234567890.pdf'))->toBe('1234567890.pdf')
+        ->and(FileHelper::trimFileName('12345678901.pdf'))->toBe('....2345678901.pdf')
+        ->and(FileHelper::trimFileName('1704067200-document.pdf'))->toBe('....0-document.pdf');
 });

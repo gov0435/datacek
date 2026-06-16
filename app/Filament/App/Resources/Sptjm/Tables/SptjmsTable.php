@@ -57,7 +57,8 @@ class SptjmsTable
                     }),
                 TextColumn::make('unggahanValid.file_name')
                     ->label('File')
-                    ->default('-'),
+                    ->default('-')
+                    ->formatStateUsing(fn (?string $state): ?string => FileHelper::trimFileName($state)),
                 TextColumn::make('unggahanValid.updated_at')
                     ->label('Tgl Upload')
                     ->dateTime('d M Y H:i')

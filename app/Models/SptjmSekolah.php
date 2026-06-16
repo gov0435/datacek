@@ -20,7 +20,15 @@ class SptjmSekolah extends Model
         'scope',
         'jumlah_guru',
         'generated_by',
+        'is_valid',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_valid' => 'boolean',
+        ];
+    }
 
     public function unggahan(): HasMany
     {
@@ -30,7 +38,6 @@ class SptjmSekolah extends Model
     public function unggahanValid(): HasOne
     {
         return $this->hasOne(SptjmUnggahan::class, 'sptjm_sekolah_id')
-            ->where('is_valid', true)
             ->latestOfMany();
     }
 

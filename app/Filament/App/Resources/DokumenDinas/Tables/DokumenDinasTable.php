@@ -12,6 +12,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -41,6 +42,18 @@ class DokumenDinasTable
                         'Valid' => 'success',
                         'Pending' => 'warning',
                         default => 'gray',
+                    }),
+                ToggleColumn::make('is_valid')
+                    ->label('Valid')
+                    ->visible(fn (): bool => Auth::user()?->isKgtk())
+                    ->afterStateUpdated(function (DokumenDinas $record, bool $state): void {
+                        Notification::make()
+                            ->title($state
+                                ? "Dokumen {$record->jenis->getLabel()} ditandai Valid"
+                                : "Dokumen {$record->jenis->getLabel()} ditandai Tidak Valid"
+                            )
+                            ->success()
+                            ->send();
                     }),
                 TextColumn::make('file_name')
                     ->label('File')
@@ -135,7 +148,7 @@ class DokumenDinasTable
                         'file_name' => basename($data['file']),
                         'file_mime' => 'application/pdf',
                         'file_size' => null,
-                        'is_valid' => true,
+                        'is_valid' => false,
                         'catatan' => $data['catatan'] ?? null,
                         'uploaded_by' => Auth::id(),
                     ]);

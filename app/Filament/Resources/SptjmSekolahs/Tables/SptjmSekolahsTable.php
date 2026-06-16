@@ -120,10 +120,9 @@ class SptjmSekolahsTable
                         }
 
                         return match ($data['value']) {
-                            'belum' => $query->whereDoesntHave('unggahan'),
-                            'pending' => $query->whereHas('unggahan', fn ($q) => $q->where('is_valid', false))
-                                ->whereDoesntHave('unggahan', fn ($q) => $q->where('is_valid', true)),
-                            'valid' => $query->whereHas('unggahanValid'),
+                            'belum' => $query->where('is_valid', false)->whereDoesntHave('unggahan'),
+                            'pending' => $query->where('is_valid', false)->whereHas('unggahan'),
+                            'valid' => $query->where('is_valid', true),
                             default => $query,
                         };
                     }),
@@ -135,17 +134,15 @@ class SptjmSekolahsTable
 
     private static function getStatusSptjm(SptjmSekolah $record): string
     {
-        $unggahan = $record->relationLoaded('unggahanValid') ? $record->unggahanValid : $record->unggahanValid()->first();
-
-        if ($unggahan === null) {
-            if ($record->relationLoaded('unggahan') ? $record->unggahan->isEmpty() : $record->unggahan()->count() === 0) {
-                return 'Belum Diupload';
-            }
-
-            return 'Pending';
+        if ($record->is_valid) {
+            return 'Valid';
         }
 
-        return 'Valid';
+        if ($record->relationLoaded('unggahan') ? $record->unggahan->isEmpty() : $record->unggahan()->count() === 0) {
+            return 'Belum Diupload';
+        }
+
+        return 'Pending';
     }
 
     public static function generateSekolah(array $data): void

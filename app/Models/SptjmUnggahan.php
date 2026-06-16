@@ -16,7 +16,6 @@ class SptjmUnggahan extends Model
         'file_name',
         'file_mime',
         'file_size',
-        'is_valid',
         'catatan',
         'uploaded_by',
     ];
@@ -24,7 +23,6 @@ class SptjmUnggahan extends Model
     protected function casts(): array
     {
         return [
-            'is_valid' => 'boolean',
             'file_size' => 'integer',
         ];
     }

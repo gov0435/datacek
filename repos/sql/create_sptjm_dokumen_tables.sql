@@ -10,8 +10,8 @@
 -- 1. CREATE sptjm_sekolah (master per sekolah)
 -- ============================================================================
 
-DROP TABLE IF EXISTS sptjm_unggahan CASCADE;
-DROP TABLE IF EXISTS sptjm_sekolah CASCADE;
+-- DROP TABLE IF EXISTS sptjm_unggahan CASCADE;
+-- DROP TABLE IF EXISTS sptjm_sekolah CASCADE;
 
 CREATE TABLE sptjm_sekolah (
     id BIGSERIAL PRIMARY KEY,
@@ -22,6 +22,7 @@ CREATE TABLE sptjm_sekolah (
     sekolah_propinsi VARCHAR(255),
     scope VARCHAR(50),                          -- 'kabkota' atau 'provinsi'
     jumlah_guru INTEGER DEFAULT 0,             -- snapshot jumlah guru non-Berminat saat generate
+    is_valid BOOLEAN DEFAULT FALSE,            -- penanda validasi fisik oleh KGTK
     generated_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP
@@ -43,14 +44,13 @@ CREATE TABLE sptjm_unggahan (
     file_name VARCHAR(255) NOT NULL,            -- nama asli file
     file_mime VARCHAR(255),
     file_size BIGINT,                           -- bytes
-    is_valid BOOLEAN DEFAULT TRUE,              -- penanda file valid terakhir
     catatan TEXT,
     uploaded_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_sptjm_unggahan_sekolah_valid ON sptjm_unggahan(sptjm_sekolah_id, is_valid);
+CREATE INDEX idx_sptjm_unggahan_sekolah ON sptjm_unggahan(sptjm_sekolah_id);
 
 -- ============================================================================
 -- 3. CREATE dokumen_dinas (Berita Acara & dokumen tingkat dinas lainnya)
@@ -58,7 +58,7 @@ CREATE INDEX idx_sptjm_unggahan_sekolah_valid ON sptjm_unggahan(sptjm_sekolah_id
 --    (BUKAN menggunakan tabel sekolah/SPTJM)
 -- ============================================================================
 
-DROP TABLE IF EXISTS dokumen_dinas CASCADE;
+-- DROP TABLE IF EXISTS dokumen_dinas CASCADE;
 
 CREATE TABLE dokumen_dinas (
     id BIGSERIAL PRIMARY KEY,

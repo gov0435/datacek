@@ -16,6 +16,7 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -55,6 +56,18 @@ class SptjmsTable
                         'Pending' => 'warning',
                         default => 'gray',
                     }),
+                ToggleColumn::make('is_valid')
+                    ->label('Valid')
+                    ->visible(fn (): bool => Auth::user()?->isKgtk())
+                    ->afterStateUpdated(function (SptjmSekolah $record, bool $state): void {
+                        Notification::make()
+                            ->title($state
+                                ? "SPTJM {$record->sekolah_nama} ditandai Valid"
+                                : "SPTJM {$record->sekolah_nama} ditandai Tidak Valid"
+                            )
+                            ->success()
+                            ->send();
+                    }),
                 TextColumn::make('unggahanValid.file_name')
                     ->label('File')
                     ->default('-')
@@ -80,11 +93,7 @@ class SptjmsTable
 
     private static function getStatusSptjm(SptjmSekolah $record): string
     {
-        $valid = $record->relationLoaded('unggahanValid')
-            ? $record->unggahanValid
-            : $record->unggahanValid()->first();
-
-        if ($valid !== null) {
+        if ($record->is_valid) {
             return 'Valid';
         }
 
@@ -196,15 +205,12 @@ class SptjmsTable
             ])
             ->action(function (array $data, SptjmSekolah $record): void {
                 DB::transaction(function () use ($data, $record): void {
-                    $record->unggahan()->update(['is_valid' => false]);
-
                     $record->unggahan()->create([
                         'disk' => 's3',
                         'file_path' => $data['file'],
                         'file_name' => basename($data['file']),
                         'file_mime' => 'application/pdf',
                         'file_size' => null,
-                        'is_valid' => true,
                         'catatan' => $data['catatan'] ?? null,
                         'uploaded_by' => Auth::id(),
                     ]);

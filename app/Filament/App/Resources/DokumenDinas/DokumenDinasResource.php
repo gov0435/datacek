@@ -13,6 +13,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use UnitEnum;
 
 class DokumenDinasResource extends Resource
@@ -42,7 +43,12 @@ class DokumenDinasResource extends Resource
 
         return DokumenDinas::query()
             ->where('kabkota', $kabkota)
-            ->where('is_valid', true);
+            ->whereIn('id', function ($query) use ($kabkota) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('dokumen_dinas')
+                    ->where('kabkota', $kabkota)
+                    ->groupBy('jenis');
+            });
     }
 
     public static function canViewAny(): bool

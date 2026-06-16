@@ -34,7 +34,7 @@ class SptjmResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery()->with('unggahanValid');
+        $query = parent::getEloquentQuery()->with(['unggahanValid', 'unggahan']);
 
         $kabKota = static::getAuthenticatedWhitelistKabKota();
 

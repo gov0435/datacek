@@ -11,6 +11,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -28,12 +29,13 @@ class DokumenDinasTable
         return $table
             ->deferLoading()
             ->heading(fn (): string => DokumenDinasResource::getWhitelistKabKotaHeading())
-            ->description(new HtmlString('Dokumen Dinas per Jenis'))
+            ->description(new HtmlString('Dokumen Dinas'))
             ->columns([
                 TextColumn::make('jenis')
                     ->label('Jenis Dokumen')
                     ->badge()
-                    ->sortable(),
+                    ->sortable()
+                    ->description(fn (DokumenDinas $record): ?string => $record->catatan),
                 TextColumn::make('status_dokumen')
                     ->label('Status')
                     ->state(fn (DokumenDinas $record): string => static::getStatusLabel($record))
@@ -64,23 +66,15 @@ class DokumenDinasTable
                     ->label('Tgl Upload')
                     ->dateTime('d M Y H:i')
                     ->sortable(),
-                TextColumn::make('jumlah_versi')
-                    ->label('Versi')
-                    ->state(fn (DokumenDinas $record): int => $record->id
-                        ? DokumenDinas::where('kabkota', $record->kabkota)
-                            ->where('jenis', $record->jenis)
-                            ->count()
-                        : 0
-                    )
-                    ->alignRight(),
             ])
             ->headerActions([
                 static::uploadDokumenHeaderAction(),
             ])
             ->filters([])
-            ->defaultSort('jenis')
+            ->defaultSort('updated_at', 'desc')
             ->recordActions([
                 static::unduhDokumenAction(),
+                static::deleteDokumenAction(),
             ])
             ->toolbarActions([]);
     }
@@ -136,10 +130,6 @@ class DokumenDinasTable
                 }
 
                 DB::transaction(function () use ($data, $kabkota, $jenis): void {
-                    DokumenDinas::where('kabkota', $kabkota)
-                        ->where('jenis', $jenis)
-                        ->update(['is_valid' => false]);
-
                     DokumenDinas::create([
                         'kabkota' => $kabkota,
                         'jenis' => $jenis,
@@ -166,27 +156,35 @@ class DokumenDinasTable
         return Action::make('unduhDokumen')
             ->label('Unduh')
             ->icon('heroicon-o-arrow-down-tray')
-            ->action(function (DokumenDinas $record): ?StreamedResponse {
-                $valid = DokumenDinas::where('kabkota', $record->kabkota)
-                    ->where('jenis', $record->jenis)
-                    ->where('is_valid', true)
-                    ->first();
-
-                if ($valid === null) {
-                    Notification::make()
-                        ->title('Belum ada dokumen yang valid')
-                        ->warning()
-                        ->send();
-
-                    return null;
-                }
-
-                return static::downloadFile($valid);
-            });
+            ->action(fn (DokumenDinas $record): StreamedResponse => static::downloadFile($record));
     }
 
     private static function downloadFile(DokumenDinas $record): StreamedResponse
     {
         return Storage::disk($record->disk)->download($record->file_path, $record->file_name);
+    }
+
+    private static function deleteDokumenAction(): Action
+    {
+        return Action::make('deleteDokumen')
+            ->label('Hapus')
+            ->color('danger')
+            ->icon(Heroicon::Trash)
+            ->modalIcon(Heroicon::OutlinedTrash)
+            ->modalHeading('Hapus Dokumen Dinas?')
+            ->modalDescription('Dokumen ini akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.')
+            ->modalSubmitActionLabel('Ya, Hapus')
+            ->modalCancelActionLabel('Batal')
+            ->requiresConfirmation()
+            ->action(function (DokumenDinas $record): void {
+                Storage::disk($record->disk)->delete($record->file_path);
+
+                $record->delete();
+
+                Notification::make()
+                    ->title('Dokumen berhasil dihapus')
+                    ->success()
+                    ->send();
+            });
     }
 }

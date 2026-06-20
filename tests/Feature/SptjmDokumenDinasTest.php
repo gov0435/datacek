@@ -210,7 +210,7 @@ test('file helper trim file name trims correctly', function () {
 // ============================================================================
 // New Toggle and Relation Tests
 // ============================================================================
-test('dokumen dinas resource getEloquentQuery retrieves only latest upload per jenis per kabkota', function () {
+test('dokumen dinas resource getEloquentQuery retrieves all uploads for user kabkota', function () {
     $user = User::factory()->create([
         'email' => 'kgtk@example.com',
         'role' => 'kgtk',
@@ -263,10 +263,10 @@ test('dokumen dinas resource getEloquentQuery retrieves only latest upload per j
 
     $results = DokumenDinasResource::getEloquentQuery()->get();
 
-    expect($results)->toHaveCount(2)
+    expect($results)->toHaveCount(3)
+        ->and($results->pluck('id')->all())->toContain($doc1->id)
         ->and($results->pluck('id')->all())->toContain($doc2->id)
         ->and($results->pluck('id')->all())->toContain($doc3->id)
-        ->and($results->pluck('id')->all())->not->toContain($doc1->id)
         ->and($results->pluck('id')->all())->not->toContain($doc4->id);
 });
 

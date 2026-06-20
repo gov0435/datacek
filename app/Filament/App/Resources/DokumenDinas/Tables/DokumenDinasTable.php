@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DokumenDinasTable
 {
@@ -156,12 +155,10 @@ class DokumenDinasTable
         return Action::make('unduhDokumen')
             ->label('Unduh')
             ->icon('heroicon-o-arrow-down-tray')
-            ->action(fn (DokumenDinas $record): StreamedResponse => static::downloadFile($record));
-    }
-
-    private static function downloadFile(DokumenDinas $record): StreamedResponse
-    {
-        return Storage::disk($record->disk)->download($record->file_path, $record->file_name);
+            ->url(fn (DokumenDinas $record): string => Storage::disk($record->disk)
+                ->temporaryUrl($record->file_path, now()->addMinutes(60))
+            )
+            ->openUrlInNewTab();
     }
 
     private static function deleteDokumenAction(): Action

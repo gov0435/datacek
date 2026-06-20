@@ -10,6 +10,7 @@ use App\Models\SurveyPpg;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -128,7 +129,9 @@ class SptjmSekolahsTable
                     }),
             ])
             ->defaultSort('sekolah_npsn')
-            ->recordActions([])
+            ->recordActions([
+                static::deleteAction(),
+            ])
             ->toolbarActions([]);
     }
 
@@ -220,5 +223,36 @@ class SptjmSekolahsTable
             ->title('Generate selesai: '.$rows->count().' sekolah diproses'.($deleted ? ', '.$deleted.' sekolah dihapus (semua guru Berminat)' : ''))
             ->success()
             ->send();
+    }
+
+    private static function deleteAction(): Action
+    {
+        return Action::make('deleteSptjm')
+            ->label('Hapus Docs')
+            ->color('danger')
+            ->icon(Heroicon::Trash)
+            ->modalIcon(Heroicon::OutlinedTrash)
+            ->modalHeading('Hapus Dokumen SPTJM?')
+            ->modalDescription('Semua file upload SPTJM untuk sekolah ini akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.')
+            ->modalSubmitActionLabel('Ya, Hapus')
+            ->modalCancelActionLabel('Batal')
+            ->requiresConfirmation()
+            ->visible(fn (SptjmSekolah $record): bool => $record->unggahan()->count() > 0)
+            ->action(function (SptjmSekolah $record): void {
+                $unggahan = $record->unggahan()->get();
+
+                foreach ($unggahan as $u) {
+                    Storage::disk($u->disk)->delete($u->file_path);
+                }
+
+                $record->unggahan()->delete();
+
+                $record->update(['is_valid' => false]);
+
+                Notification::make()
+                    ->title('Semua dokumen SPTJM berhasil dihapus')
+                    ->success()
+                    ->send();
+            });
     }
 }

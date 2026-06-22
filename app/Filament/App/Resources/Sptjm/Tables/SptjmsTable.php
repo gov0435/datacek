@@ -114,6 +114,11 @@ class SptjmsTable
             ->label('Detail')
             ->icon('heroicon-o-arrow-top-right-on-square')
             ->slideOver()
+            ->modalSubmitAction(
+                fn (Action $action): Action => $action
+                    ->visible(fn (SptjmSekolah $record): bool => ! ($record->is_valid && $record->unggahanValid()->exists()))
+                    ->label('Upload')
+            )
             ->schema(fn (SptjmSekolah $record): array => [
                 Section::make('Informasi Sekolah')
                     ->schema([
@@ -165,11 +170,17 @@ class SptjmsTable
                             ->getUploadedFileNameForStorageUsing(
                                 fn (TemporaryUploadedFile $file): string => FileHelper::generateUniqueFileName($file->getClientOriginalName())
                             )
-                            ->required(),
+                            ->required(fn (SptjmSekolah $record): bool => ! ($record->is_valid && $record->unggahanValid()->exists()))
+                            ->disabled(fn (SptjmSekolah $record): bool => $record->is_valid && $record->unggahanValid()->exists())
+                            ->deletable(fn (SptjmSekolah $record): bool => ! ($record->is_valid && $record->unggahanValid()->exists()))
+                            ->helperText(fn (SptjmSekolah $record): ?string => ($record->is_valid && $record->unggahanValid()->exists())
+                                ? 'SPTJM sudah divalidasi dan tidak dapat diubah.'
+                                : null),
 
                         Textarea::make('catatan')
                             ->label('Catatan (opsional)')
-                            ->rows(3),
+                            ->rows(3)
+                            ->disabled(fn (SptjmSekolah $record): bool => $record->is_valid && $record->unggahanValid()->exists()),
                     ])
                     ->compact(),
 
@@ -204,6 +215,15 @@ class SptjmsTable
 
             ])
             ->action(function (array $data, SptjmSekolah $record): void {
+                if ($record->is_valid && $record->unggahanValid()->exists()) {
+                    Notification::make()
+                        ->title('SPTJM sudah divalidasi dan tidak dapat diubah.')
+                        ->danger()
+                        ->send();
+
+                    return;
+                }
+
                 DB::transaction(function () use ($data, $record): void {
                     $record->unggahan()->create([
                         'disk' => 's3',

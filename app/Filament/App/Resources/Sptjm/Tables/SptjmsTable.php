@@ -17,6 +17,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -83,7 +84,33 @@ class SptjmsTable
                     ->alignRight(),
             ])
             ->headerActions([])
-            ->filters([])
+            ->filters([
+                SelectFilter::make('sekolah_jenjang')
+                    ->label('Jenjang')
+                    ->multiple()
+                    ->options(SptjmResource::getJenjangFilterOptions()),
+                SelectFilter::make('status_sptjm')
+                    ->label('Status SPTJM')
+                    ->options([
+                        'valid' => 'Valid',
+                        'pending' => 'Pending',
+                        'belum_diupload' => 'Belum Diupload',
+                    ])
+                    ->query(function ($query, array $data) {
+                        $value = $data['value'] ?? null;
+
+                        if ($value === null || $value === '') {
+                            return $query;
+                        }
+
+                        return match ($value) {
+                            'valid' => $query->where('is_valid', true),
+                            'pending' => $query->where('is_valid', false)->whereHas('unggahan'),
+                            'belum_diupload' => $query->where('is_valid', false)->whereDoesntHave('unggahan'),
+                            default => $query,
+                        };
+                    }),
+            ])
             ->defaultSort('sekolah_nama')
             ->recordActions([
                 static::detailAction(),

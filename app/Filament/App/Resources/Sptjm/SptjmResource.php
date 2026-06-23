@@ -2,6 +2,7 @@
 
 namespace App\Filament\App\Resources\Sptjm;
 
+use App\Enums\Jenjang;
 use App\Filament\App\Resources\Sptjm\Pages\ListSptjms;
 use App\Filament\App\Resources\Sptjm\Tables\SptjmsTable;
 use App\Models\SptjmSekolah;
@@ -17,6 +18,10 @@ use UnitEnum;
 
 class SptjmResource extends Resource
 {
+    private const JENJANG_KAB_KOTA = ['PAUD', 'SD', 'SMP', 'Lainnya'];
+
+    private const JENJANG_PROVINSI = ['SLB', 'SMA', 'SMK'];
+
     protected static ?string $slug = 'sptjm';
 
     protected static ?string $model = SptjmSekolah::class;
@@ -73,6 +78,32 @@ class SptjmResource extends Resource
         }
 
         return [$kabKota => $kabKota];
+    }
+
+    public static function isProvinsiScope(): bool
+    {
+        $kabKota = static::getAuthenticatedWhitelistKabKota();
+
+        return $kabKota !== null && str_contains(strtolower($kabKota), 'provinsi');
+    }
+
+    public static function getAllowedJenjangValues(): array
+    {
+        if (static::isProvinsiScope()) {
+            return self::JENJANG_PROVINSI;
+        }
+
+        return self::JENJANG_KAB_KOTA;
+    }
+
+    public static function getJenjangFilterOptions(): array
+    {
+        $allowed = static::getAllowedJenjangValues();
+
+        return collect(Jenjang::cases())
+            ->filter(fn (Jenjang $jenjang): bool => in_array($jenjang->value, $allowed, true))
+            ->mapWithKeys(fn (Jenjang $jenjang): array => [$jenjang->value => $jenjang->value])
+            ->all();
     }
 
     public static function getAuthenticatedWhitelistKabKota(): ?string

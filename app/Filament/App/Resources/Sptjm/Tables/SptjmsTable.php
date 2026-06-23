@@ -116,7 +116,6 @@ class SptjmsTable
             ->slideOver()
             ->modalSubmitAction(
                 fn (Action $action): Action => $action
-                    ->visible(fn (SptjmSekolah $record): bool => ! ($record->is_valid && $record->unggahanValid()->exists()))
                     ->label('Upload')
             )
             ->schema(fn (SptjmSekolah $record): array => [

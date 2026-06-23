@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SurveyPpgs\Tables;
 
+use App\Enums\BagrenStatus;
 use App\Enums\LayakDaftar;
 use App\Enums\PotensiStatus;
 use App\Enums\VervalStatus;
@@ -75,6 +76,11 @@ class SurveyPpgsTable
                     ->badge()
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('peserta_bagren_status')
+                    ->label('Status Bagren')
+                    ->badge()
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('keterangan')
                     ->label('Keterangan')
                     ->searchable(),
@@ -93,10 +99,7 @@ class SurveyPpgsTable
                     ->trueLabel('Lolos')
                     ->falseLabel('Belum'),
                 SelectFilter::make('potensi_status')
-                    ->label('Survey')
-                    ->options(PotensiStatus::class),
-                SelectFilter::make('peserta_keberminatan_status')
-                    ->label('Status Keberminatan')
+                    ->label('Status Berminat')
                     ->options(PotensiStatus::class),
                 SelectFilter::make('peserta_layak_daftar')
                     ->label('Layak Daftar')
@@ -104,6 +107,31 @@ class SurveyPpgsTable
                 SelectFilter::make('verval_status')
                     ->label('Status Verval')
                     ->options(VervalStatus::class),
+                SelectFilter::make('peserta_bagren_status')
+                    ->label('Status Bagren')
+                    ->options(BagrenStatus::class)
+                    ->searchable()
+                    ->multiple()
+                    ->native(false)
+                    ->query(function ($query, array $data) {
+                        $values = $data['values'] ?? [];
+                        if (empty($values)) {
+                            return $query;
+                        }
+                        $hasNull = in_array(BagrenStatus::Kosong->value, $values, true);
+                        $nonNull = array_values(array_filter($values, fn ($v) => $v !== BagrenStatus::Kosong->value));
+
+                        return $query->where(function ($q) use ($hasNull, $nonNull) {
+                            if ($nonNull) {
+                                $q->whereIn('peserta_bagren_status', $nonNull);
+                            }
+                            if ($hasNull) {
+                                $nonNull
+                                    ? $q->orWhere(fn ($sub) => $sub->whereNull('peserta_bagren_status')->orWhere('peserta_bagren_status', ''))
+                                    : $q->where(fn ($sub) => $sub->whereNull('peserta_bagren_status')->orWhere('peserta_bagren_status', ''));
+                            }
+                        });
+                    }),
             ])
             ->defaultSort('nama')
             ->recordActions([])

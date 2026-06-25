@@ -13,6 +13,10 @@ class Lptk extends Page
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
 
+    protected ?string $heading = 'LPTK PPG Guter Tahap 2';
+
+    protected ?string $subheading = 'Update: 26 Juni 2026 06:59';
+
     protected string $view = 'filament.pages.lptk';
 
     public string $search = '';

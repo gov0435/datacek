@@ -1,0 +1,518 @@
+[
+    {
+        "no": 1,
+        "nama_lptk": "Universitas Negeri Gorontalo",
+        "jumlah_calon_peserta": 84,
+        "website_lptk": "https://ppg.ung.ac.id",
+        "link_lapor_diri": "",
+        "link_grup": []
+    },
+    {
+        "no": 2,
+        "nama_lptk": "Universitas Negeri Makassar",
+        "jumlah_calon_peserta": 29,
+        "website_lptk": "https://siappg.unm.ac.id",
+        "link_lapor_diri": "",
+        "link_grup": []
+    },
+    {
+        "no": 3,
+        "nama_lptk": "Universitas Pattimura",
+        "jumlah_calon_peserta": 20,
+        "website_lptk": "http://ppg.fkip.unpatti.ac.id",
+        "link_lapor_diri": "https://ppg.fkip.unpatti.ac.id/informasi-konfirmasi-kesediaan-dan-lapor-diri-ppg-guru-tertentu-tahap-2-tahun-2026/",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/Fo1LJIJNYjFJSQ3F2CMqu0"
+            }
+        ]
+    },
+    {
+        "no": 4,
+        "nama_lptk": "Universitas Negeri Manado",
+        "jumlah_calon_peserta": 15,
+        "website_lptk": "http://ppg.unima.ac.id",
+        "link_lapor_diri": "https://ppg.unima.ac.id",
+        "link_grup": [
+            {
+                "nama": "Telegram",
+                "url": "https://t.me/+IOYa-eHhazw1NzJl"
+            }
+        ]
+    },
+    {
+        "no": 5,
+        "nama_lptk": "Universitas Tadulako",
+        "jumlah_calon_peserta": 14,
+        "website_lptk": "https://ppg.fkip.untad.ac.id",
+        "link_lapor_diri": "https://ppg.fkip.untad.ac.id/berita/-informasi-ppg-guru-tertentu-tahap-2-2026-universitas-tadulako-20260623",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/J4ugUNx1EULESXhkrbU8NY"
+            }
+        ]
+    },
+    {
+        "no": 6,
+        "nama_lptk": "Universitas Cenderawasih",
+        "jumlah_calon_peserta": 8,
+        "website_lptk": "https://www.ppg.fkip.uncen.ac.id",
+        "link_lapor_diri": "https://ppg.fkip.uncen.ac.id/lapor-diri-ppg-guru-tertentu-tahap-2-tahun-2026-komitmen-universitas-cenderawasih-dalam-menjawab-tantangan-pendidikan-masa-depan/",
+        "link_grup": [
+            {
+                "nama": "Telegram",
+                "url": "https://t.me/+A3EmwSsAGvk1MTk1"
+            }
+        ]
+    },
+    {
+        "no": 7,
+        "nama_lptk": "Universitas Khairun Ternate",
+        "jumlah_calon_peserta": 7,
+        "website_lptk": "https://ppg.unkhair.ac.id",
+        "link_lapor_diri": "https://ppg.unkhair.ac.id/berita/lapor-diri-ppg-dalam-jabatan-guru-tertentu-tahap-ii-tahun-2026",
+        "link_grup": [
+            {
+                "nama": "Looker Studio",
+                "url": "https://datastudio.google.com/s/hUtKDoxxhLw"
+            }
+        ]
+    },
+    {
+        "no": 8,
+        "nama_lptk": "Universitas Madura",
+        "jumlah_calon_peserta": 7,
+        "website_lptk": "https://ppg.unira.ac.id",
+        "link_lapor_diri": "https://ppg.unira.ac.id/lapor-diri",
+        "link_grup": []
+    },
+    {
+        "no": 9,
+        "nama_lptk": "Universitas Negeri Surabaya",
+        "jumlah_calon_peserta": 6,
+        "website_lptk": "https://siakaduppg.unesa.ac.id",
+        "link_lapor_diri": "https://ppg.unesa.ac.id/post/informasi-lapor-diri-peserta-ppg-guru-tertentu-tahap-2-tahun-2026-lptk-universitas-negeri-surabaya",
+        "link_grup": [
+            {
+                "nama": "Telegram",
+                "url": "https://t.me/+zz4a8jxPwCw4MDU1"
+            }
+        ]
+    },
+    {
+        "no": 10,
+        "nama_lptk": "Universitas Negeri Padang",
+        "jumlah_calon_peserta": 5,
+        "website_lptk": "http://ppg.unp.ac.id",
+        "link_lapor_diri": "http://ppg.unp.ac.id/index.php/2026/06/23/lapor-diri-guru-tertentu-tahap-2-tahun-2026-kemdikdasmen/",
+        "link_grup": [
+            {
+                "nama": "Telegram",
+                "url": "https://t.me/+6-sLxUJbHYZkNGQ1"
+            }
+        ]
+    },
+    {
+        "no": 11,
+        "nama_lptk": "Universitas Negeri Yogyakarta",
+        "jumlah_calon_peserta": 5,
+        "website_lptk": "https://ppg.uny.ac.id",
+        "link_lapor_diri": "https://ppg.uny.ac.id/node/19153",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://uny.id/CPKIRIM"
+            }
+        ]
+    },
+    {
+        "no": 12,
+        "nama_lptk": "Universitas Pendidikan Ganesha",
+        "jumlah_calon_peserta": 5,
+        "website_lptk": "http://ppg.undiksha.ac.id",
+        "link_lapor_diri": "https://ppg.undiksha.ac.id/persiapan-lapor-diri-gt2-2026/",
+        "link_grup": []
+    },
+    {
+        "no": 13,
+        "nama_lptk": "Universitas Dayanu Ikhsanuddin",
+        "jumlah_calon_peserta": 4,
+        "website_lptk": "https://ppg.unidayan.ac.id",
+        "link_lapor_diri": "https://ppg.unidayan.ac.id/halaman/1-lapor-diri",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/BcnizMwbA2G8PKjm4MIWqj"
+            }
+        ]
+    },
+    {
+        "no": 14,
+        "nama_lptk": "Universitas Maritim Raja Ali Haji",
+        "jumlah_calon_peserta": 4,
+        "website_lptk": "https://ppg.umrah.ac.id",
+        "link_lapor_diri": "https://linktr.ee/PPG_UMRAH",
+        "link_grup": []
+    },
+    {
+        "no": 15,
+        "nama_lptk": "Universitas Muhammadiyah Kendari",
+        "jumlah_calon_peserta": 4,
+        "website_lptk": "http://ppg.umkendari.ac.id",
+        "link_lapor_diri": "https://ppg.umkendari.ac.id/berita/pendidikan-profesi-guru-bagi-guru-tertentu-tahap-2-tahun-2026",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/FiiZqeUcI9k1lVs1taeIyh"
+            }
+        ]
+    },
+    {
+        "no": 16,
+        "nama_lptk": "Universitas Pendidikan Indonesia",
+        "jumlah_calon_peserta": 4,
+        "website_lptk": "http://ppg.sps.upi.edu",
+        "link_lapor_diri": "https://ppg.sps.upi.edu/lapor-diri-ppg-guru-tertentu-tahap-2-tahun-2026/",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://whatsapp.com/channel/0029VbCGJL547XeGWxxXls0N"
+            }
+        ]
+    },
+    {
+        "no": 17,
+        "nama_lptk": "Universitas Sebelas Maret",
+        "jumlah_calon_peserta": 4,
+        "website_lptk": "http://ppg.fkip.uns.ac.id",
+        "link_lapor_diri": "https://ppg.fkip.uns.ac.id/berita-terbaru/",
+        "link_grup": [
+            {
+                "nama": "Telegram",
+                "url": "https://t.me/official_gt2_2026_uns"
+            }
+        ]
+    },
+    {
+        "no": 18,
+        "nama_lptk": "Universitas Al Asyariah Mandar",
+        "jumlah_calon_peserta": 3,
+        "website_lptk": "https://fkip.unasman.ac.id",
+        "link_lapor_diri": "https://fkip.unasman.ac.id",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/H5WIiAtpyDgKva0OrLThsk"
+            }
+        ]
+    },
+    {
+        "no": 19,
+        "nama_lptk": "Universitas Muhammadiyah Palembang",
+        "jumlah_calon_peserta": 3,
+        "website_lptk": "http://fkip.um-palembang.ac.id/ppg",
+        "link_lapor_diri": "",
+        "link_grup": []
+    },
+    {
+        "no": 20,
+        "nama_lptk": "Universitas Muhammadiyah Pontianak",
+        "jumlah_calon_peserta": 3,
+        "website_lptk": "https://fkip.unmuhpnk.ac.id/program-ppg",
+        "link_lapor_diri": "https://fkip.unmuhpnk.ac.id/program-ppg/",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/D746CDH8bYj56TbQmBRuye"
+            }
+        ]
+    },
+    {
+        "no": 21,
+        "nama_lptk": "Universitas Negeri Jakarta",
+        "jumlah_calon_peserta": 3,
+        "website_lptk": "https://ppg.unj.ac.id",
+        "link_lapor_diri": "https://ppg.unj.ac.id/lapor-diri-ppg-guru-tertentu-dikdasmen-dalam-jabatan-tahap-2-tahun-2026-universitas-negeri-jakarta/",
+        "link_grup": [
+            {
+                "nama": "WhatsApp - 1",
+                "url": "https://chat.whatsapp.com/CcK69UGX4iPDCuOnnmz0Lo"
+            },
+            {
+                "nama": "WhatsApp - 2",
+                "url": "https://chat.whatsapp.com/LgK6sFzrnYqAT6xfPrLqRN"
+            }
+        ]
+    },
+    {
+        "no": 22,
+        "nama_lptk": "Universitas PGRI Semarang",
+        "jumlah_calon_peserta": 3,
+        "website_lptk": "https://ppg.upgris.ac.id",
+        "link_lapor_diri": "",
+        "link_grup": []
+    },
+    {
+        "no": 23,
+        "nama_lptk": "Universitas Riau Kepulauan",
+        "jumlah_calon_peserta": 3,
+        "website_lptk": "https://www.fkip.unrika.ac.id/ppg",
+        "link_lapor_diri": "https://www.fkip.unrika.ac.id/wp-content/uploads/2026/06/SPem-Lapor-Diri-PPG-GT-Tahap-2-Tahun-2026-UNRIKA.pdf",
+        "link_grup": []
+    },
+    {
+        "no": 24,
+        "nama_lptk": "Universitas Bengkulu",
+        "jumlah_calon_peserta": 2,
+        "website_lptk": "https://ppg.fkip.unib.ac.id",
+        "link_lapor_diri": "",
+        "link_grup": []
+    },
+    {
+        "no": 25,
+        "nama_lptk": "Universitas Mahasaraswati Denpasar",
+        "jumlah_calon_peserta": 2,
+        "website_lptk": "https://ppg.unmas.ac.id",
+        "link_lapor_diri": "",
+        "link_grup": []
+    },
+    {
+        "no": 26,
+        "nama_lptk": "Universitas Malikussaleh",
+        "jumlah_calon_peserta": 2,
+        "website_lptk": "https://ppg.fkip.unimal.ac.id",
+        "link_lapor_diri": "https://ppg.fkip.unimal.ac.id/berita/65-lapor-diri-peserta-ppg-guru-tertentu-tahap-2-tahun-2026",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/ExHbns59dRe9RmYMX1OimD"
+            }
+        ]
+    },
+    {
+        "no": 27,
+        "nama_lptk": "Universitas Muhammadiyah Malang",
+        "jumlah_calon_peserta": 2,
+        "website_lptk": "https://ppg.umm.ac.id",
+        "link_lapor_diri": "https://ppg.umm.ac.id/informasi-konfirmasi-kesediaan-dan-lapor-diri-ppg-bagi-guru-tertentu-tahun-2026-tahap-2-kementerian-pendidikan-dasar-dan-menengah/",
+        "link_grup": [
+            {
+                "nama": "WhatsApp - PGSD",
+                "url": "https://chat.whatsapp.com/J3UBclhXO2qLO4IpAr1QK9"
+            },
+            {
+                "nama": "WhatsApp - Layanan Kesehatan",
+                "url": "https://chat.whatsapp.com/IZ8A7KEf45KGZLkNWX2kgV"
+            },
+            {
+                "nama": "WhatsApp - Pendidikan Pancasila",
+                "url": "https://chat.whatsapp.com/IyPLwTqfgmCFHlTbpGxAYi"
+            }
+        ]
+    },
+    {
+        "no": 28,
+        "nama_lptk": "Universitas Negeri Malang",
+        "jumlah_calon_peserta": 2,
+        "website_lptk": "https://ppg.um.ac.id",
+        "link_lapor_diri": "https://ppg.um.ac.id/informasi-lapor-diri-ppg-bgt-tahap-2-tahun-2026-di-universitas-negeri-malang/",
+        "link_grup": [
+            {
+                "nama": "Telegram",
+                "url": "https://s.id/grup-bgt-226"
+            }
+        ]
+    },
+    {
+        "no": 29,
+        "nama_lptk": "Universitas Negeri Semarang",
+        "jumlah_calon_peserta": 2,
+        "website_lptk": "https://unnes.ac.id/ppg",
+        "link_lapor_diri": "https://unnes.ac.id/ppg/2026/06/25/siapkan-berkas-anda-lapor-diri-camaba-ppg-guru-tertentu-tahap-2-tahun-2026-unnes-mulai-1-s-d-4-juli-2026/",
+        "link_grup": [
+            {
+                "nama" : "Telegram",
+                "url" : "https://t.me/+paGaIz1C6KAwMTc1"
+            }
+        ]
+    },
+    {
+        "no": 30,
+        "nama_lptk": "Universitas PGRI Argopuro Jember",
+        "jumlah_calon_peserta": 2,
+        "website_lptk": "https://ppg.uniparjember.ac.id",
+        "link_lapor_diri": "https://ppg.uniparjember.ac.id/lapor-diri.php",
+        "link_grup": []
+    },
+    {
+        "no": 31,
+        "nama_lptk": "Universitas Pasundan",
+        "jumlah_calon_peserta": 2,
+        "website_lptk": "https://ppg.fkip.unpas.ac.id",
+        "link_lapor_diri": "https://ppg.fkip.unpas.ac.id/pengumuman/detail/mekanisme-lapor-diri-peserta-ppg-bagi-guru-tertentu-tahap-2-tahun-2026",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/EL4wh4l9T46L3fC1Oq2zn6"
+            }
+        ]
+    },
+    {
+        "no": 32,
+        "nama_lptk": "Universitas Pendidikan Muhammadiyah Sorong",
+        "jumlah_calon_peserta": 2,
+        "website_lptk": "https://unimudasorong.ac.id",
+        "link_lapor_diri": "https://ppg.unimudasorong.ac.id/artikel/persyaratan-lapor-diri-ppg-bagi-guru-tertentu-tahap-22026",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/KK3UTFJZLbqGJkoRIZrZb9"
+            }
+        ]
+    },
+    {
+        "no": 33,
+        "nama_lptk": "Universitas Trunodjoyo Madura",
+        "jumlah_calon_peserta": 2,
+        "website_lptk": "https://ppg.trunojoyo.ac.id",
+        "link_lapor_diri": "https://ppg.trunojoyo.ac.id/?p=24905",
+        "link_grup": [
+            {
+                "nama": "WhatsApp - 1",
+                "url": "https://chat.whatsapp.com/F1KzU6qA3LtDRoOZPB9zsi"
+            },
+            {
+                "nama": "WhatsApp - 2",
+                "url": "https://chat.whatsapp.com/K8nWUYFdV0l6GqkctRiiSA"
+            },
+            {
+                "nama": "WhatsApp - 3",
+                "url": "https://chat.whatsapp.com/Gg7Oj52qjurCiGMgQPZVVr"
+            },
+            {
+                "nama": "WhatsApp - 4",
+                "url": "https://chat.whatsapp.com/D1OGug4m634J8aBz57AzYM"
+            }
+        ]
+    },
+    {
+        "no": 34,
+        "nama_lptk": "STKIP PGRI Pacitan",
+        "jumlah_calon_peserta": 1,
+        "website_lptk": "https://ppg.stkippacitan.ac.id",
+        "link_lapor_diri": "https://ppg.stkippacitan.ac.id/lapor-diri-tahap-2-tahun-2026/",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/IGe1Zz9SB6g5y5ZlRKWem1"
+            }
+        ]
+    },
+    {
+        "no": 35,
+        "nama_lptk": "Universitas Ahmad Dahlan",
+        "jumlah_calon_peserta": 1,
+        "website_lptk": "https://sertifikasiguru.uad.ac.id",
+        "link_lapor_diri": "https://sertifikasiguru.uad.ac.id/pelaksanaan-ppg-bagi-guru-tertentu-tahap-2-tahun-2026/",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/KYCeYuCGgHU7xFprnPZFUu"
+            }
+        ]
+    },
+    {
+        "no": 36,
+        "nama_lptk": "Universitas Baturaja",
+        "jumlah_calon_peserta": 1,
+        "website_lptk": "https://unbara.siakadcloud.com/spmbfront/jalur-seleksi-detail/151",
+        "link_lapor_diri": "https://ppgfkip.unbara.ac.id/2026/06/23/persyaratan-lapor-diri-peserta-ppg-guru-tertentu-tahap-2-tahun-2026-fkip-universitas-baturaja",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://s.id/GroupWAPPGGuruTertentuTahap2Tahun2026"
+            }
+        ]
+    },
+    {
+        "no": 37,
+        "nama_lptk": "Universitas HKBP Nommensen",
+        "jumlah_calon_peserta": 1,
+        "website_lptk": "https://uhn.ac.id/kip",
+        "link_lapor_diri": "https://uhn.ac.id/kip/lapor-diri-mahasiswa-ppg-guru-tertentu-tahun-2026-tahap-2/",
+        "link_grup": []
+    },
+    {
+        "no": 38,
+        "nama_lptk": "Universitas Ibn Khaldun Bogor",
+        "jumlah_calon_peserta": 1,
+        "website_lptk": "https://ppg.fkip.uika-bogor.ac.id",
+        "link_lapor_diri": "https://ppg.fkip.uika-bogor.ac.id/lapor-diri-ppg-guru-tertentu-tahap-2-tahun-2026/",
+        "link_grup": []
+    },
+    {
+        "no": 39,
+        "nama_lptk": "Universitas Islam Nahdlatul Ulama Jepara",
+        "jumlah_calon_peserta": 1,
+        "website_lptk": "https://ftk.unisnu.ac.id/id/prodi/pendidikan-profesi-guru",
+        "link_lapor_diri": "https://ftk.unisnu.ac.id/id/lapor-diri-mahasiswa-ppg-bagi-guru-tertentu-guter-tahap-2-tahun-2026",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/LCpzB0iH6NdKIqwQpIUC4r"
+            }
+        ]
+    },
+    {
+        "no": 40,
+        "nama_lptk": "Universitas Merangin",
+        "jumlah_calon_peserta": 1,
+        "website_lptk": "https://s.id/ppg_universitasmerangin",
+        "link_lapor_diri": "https://forms.gle/nJaQiMxeQBBv16fe7",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/J82MQxcY6jy20kijjCrwTu?s=sw&p=a&ilr=0"
+            }
+        ]
+    },
+    {
+        "no": 41,
+        "nama_lptk": "Universitas Muhammadiyah Sorong",
+        "jumlah_calon_peserta": 1,
+        "website_lptk": "https://ppg.um-sorong.ac.id",
+        "link_lapor_diri": "https://ppg.um-sorong.ac.id",
+        "link_grup": []
+    },
+    {
+        "no": 42,
+        "nama_lptk": "Universitas Muhammadiyah Yogyakarta",
+        "jumlah_calon_peserta": 1,
+        "website_lptk": "https://registrasiprofesi.umy.ac.id",
+        "link_lapor_diri": "https://ppg.umy.ac.id/lapor-diri/",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/I702WjFOfQM0BXVXKj7PWH"
+            }
+        ]
+    },
+    {
+        "no": 43,
+        "nama_lptk": "Universitas PGRI Madiun",
+        "jumlah_calon_peserta": 1,
+        "website_lptk": "http://ppg.unipma.ac.id",
+        "link_lapor_diri": "https://ppg.unipma.ac.id/pengumuman/1492/lapor-diri-peserta-ppg-guru-tertentu-tahap-2-tahun-2026-universitas-pgri-madiun",
+        "link_grup": []
+    },
+    {
+        "no": 44,
+        "nama_lptk": "Universitas PGRI Palembang",
+        "jumlah_calon_peserta": 1,
+        "website_lptk": "https://ppg.univpgri-palembang.ac.id",
+        "link_lapor_diri": "https://ppg.univpgri-palembang.ac.id/2026/06/24/informasi-lapor-diri-ppg-guru-tertentu-tahap-ii-tahun-2026-universitas-pgri-palembang/",
+        "link_grup": []
+    }
+]

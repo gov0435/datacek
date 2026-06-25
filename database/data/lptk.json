@@ -442,7 +442,20 @@
         "jumlah_calon_peserta": 1,
         "website_lptk": "https://uhn.ac.id/kip",
         "link_lapor_diri": "https://uhn.ac.id/kip/lapor-diri-mahasiswa-ppg-guru-tertentu-tahun-2026-tahap-2/",
-        "link_grup": []
+        "link_grup": [
+            {
+                "nama": "WhatsApp - Ekonomi",
+                "url": "https://chat.whatsapp.com/KhEcb9DMmNcH62MynEH3t6"
+            },
+            {
+                "nama": "WhatsApp - Bahasa Inggris",
+                "url": "https://chat.whatsapp.com/ISBEIvhpHPF601Ca7PEZzf"
+            },
+            {
+                "nama": "WhatsApp - Pendidikan Pancasila",
+                "url": "https://chat.whatsapp.com/Di3cLdKb41b6oGwIkgXNC7"
+            }
+        ]
     },
     {
         "no": 38,

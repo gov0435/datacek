@@ -1,0 +1,14 @@
+curl ^"https://ppg-backend.simpkb.id/i/801055/ppgdj-mahasiswa/konfirmasi-kesediaan?keyword=^&page=1^&limit=10^&gelombang=3^&tahun=2026^" ^
+  -H ^"accept: application/json, text/plain, */*^" ^
+  -H ^"accept-language: en-US,en;q=0.9^" ^
+  -b ^"_ga_F94CCFR0FD=GS2.1.s1760596012^$o2^$g0^$t1760596012^$j60^$l0^$h0; _ga=GA1.2.236118060.1699008647; _gid=GA1.2.564215793.1782354911; _ga_S2ZX95NLFL=GS2.2.s1782359035^$o482^$g0^$t1782359035^$j60^$l0^$h0; CASAuth=7ad5abd25e216781def69fddc60fe24c7a0992a29abc88ca9ab219271c81ee6c; _ga_DP6E6W3NFV=GS2.2.s1782359030^$o532^$g1^$t1782359389^$j5^$l0^$h0; XSRF-TOKEN=eyJpdiI6IlZNZWZFY01LTzRxT2xMb0hyTGhINUE9PSIsInZhbHVlIjoiZjNhZlZsWndtNkpnL3JBSnJORTZaQ1Z6S1gydUYxZjRWbXJGMmlpTjRaY3I1TUFwc1lXZG4wamRFdncvRFFvc1YxMzdPMTFMTjBrQ0EramZwYzRGTDNzRitwcUJoR1ZReStpODA5RE5GVXkwUmRYT3FkbkFMSndpU0owakJOWkwiLCJtYWMiOiI5NGY2YjAzNWUzZGU4MWUzZDM5ZGQzZDk3YzgwOGQyZTJkODRhNzgyMzhhNjQ2Nzg4ZDlhY2QxYTg4ODNhYTUyIiwidGFnIjoiIn0^%^3D; s_i_m_p_k_b_p_p_g_session=eyJpdiI6IkJCamw3MktzMWpZMTRCK1hucEdGT1E9PSIsInZhbHVlIjoiZWZlL2wwVzgvbmxjNFNXeWFWdGxSUUhVSXk0UjZzU0R5NzBBMndDL3FCZW5LYVFyandhS0dFT3dmYjByYWE5SncwYThSa3VkTUdlMW41ZnZHdGpJWUxOQWUwY1NjNkIrNzJDOC94dEQ1ZTgrNElNMXUvbGdZRDdUcUsrYXpTT1QiLCJtYWMiOiI1ZGFiOThlZmQ5OGMzNGE5M2JkOTY0NWJhNDkwMTg3MjZmYzc1YmU5NGU0YTgxNWM5OTE2MGMxN2MzZjI3NjljIiwidGFnIjoiIn0^%^3D^" ^
+  -H ^"origin: https://ppg.simpkb.id^" ^
+  -H ^"priority: u=1, i^" ^
+  -H ^"referer: https://ppg.simpkb.id/^" ^
+  -H ^"sec-ch-ua: ^\^"Google Chrome^\^";v=^\^"149^\^", ^\^"Chromium^\^";v=^\^"149^\^", ^\^"Not)A;Brand^\^";v=^\^"24^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  -H ^"sec-fetch-dest: empty^" ^
+  -H ^"sec-fetch-mode: cors^" ^
+  -H ^"sec-fetch-site: same-site^" ^
+  -H ^"user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36^"

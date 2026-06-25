@@ -40,7 +40,7 @@ Total calon peserta: 274
 | 34 | STKIP PGRI Pacitan | 1 | https://ppg.stkippacitan.ac.id | https://ppg.stkippacitan.ac.id/lapor-diri-tahap-2-tahun-2026/ | https://chat.whatsapp.com/IGe1Zz9SB6g5y5ZlRKWem1 |
 | 35 | Universitas Ahmad Dahlan | 1 | https://sertifikasiguru.uad.ac.id | https://sertifikasiguru.uad.ac.id/pelaksanaan-ppg-bagi-guru-tertentu-tahap-2-tahun-2026/ | https://chat.whatsapp.com/KYCeYuCGgHU7xFprnPZFUu |
 | 36 | Universitas Baturaja | 1 | https://unbara.siakadcloud.com/spmbfront/jalur-seleksi-detail/151 | https://ppgfkip.unbara.ac.id/2026/06/23/persyaratan-lapor-diri-peserta-ppg-guru-tertentu-tahap-2-tahun-2026-fkip-universitas-baturaja | https://s.id/GroupWAPPGGuruTertentuTahap2Tahun2026 |
-| 37 | Universitas HKBP Nommensen | 1 | https://uhn.ac.id/kip | https://uhn.ac.id/kip/lapor-diri-mahasiswa-ppg-guru-tertentu-tahun-2026-tahap-2/ |
+| 37 | Universitas HKBP Nommensen | 1 | https://uhn.ac.id/kip | https://uhn.ac.id/kip/lapor-diri-mahasiswa-ppg-guru-tertentu-tahun-2026-tahap-2/ | https://chat.whatsapp.com/KhEcb9DMmNcH62MynEH3t6, https://chat.whatsapp.com/ISBEIvhpHPF601Ca7PEZzf, https://chat.whatsapp.com/Di3cLdKb41b6oGwIkgXNC7 |
 | 38 | Universitas Ibn Khaldun Bogor | 1 | https://ppg.fkip.uika-bogor.ac.id | https://ppg.fkip.uika-bogor.ac.id/lapor-diri-ppg-guru-tertentu-tahap-2-tahun-2026/ |
 | 39 | Universitas Islam Nahdlatul Ulama Jepara | 1 | https://ftk.unisnu.ac.id/id/prodi/pendidikan-profesi-guru | https://ftk.unisnu.ac.id/id/lapor-diri-mahasiswa-ppg-bagi-guru-tertentu-guter-tahap-2-tahun-2026 | https://chat.whatsapp.com/LCpzB0iH6NdKIqwQpIUC4r |
 | 40 | Universitas Merangin | 1 | https://s.id/ppg_universitasmerangin | https://s.id/ppg_universitasmerangin | https://chat.whatsapp.com/J82MQxcY6jy20kijjCrwTu?s=sw&p=a&ilr=0 |

@@ -47,4 +47,4 @@ Total calon peserta: 274
 | 41 | Universitas Muhammadiyah Sorong | 1 | https://ppg.um-sorong.ac.id | https://ppg.um-sorong.ac.id |
 | 42 | Universitas Muhammadiyah Yogyakarta | 1 | https://registrasiprofesi.umy.ac.id | https://ppg.umy.ac.id/lapor-diri/ | https://chat.whatsapp.com/I702WjFOfQM0BXVXKj7PWH |
 | 43 | Universitas PGRI Madiun | 1 | http://ppg.unipma.ac.id | https://ppg.unipma.ac.id/pengumuman/1492/lapor-diri-peserta-ppg-guru-tertentu-tahap-2-tahun-2026-universitas-pgri-madiun |
-| 44 | Universitas PGRI Palembang | 1 | https://ppg.univpgri-palembang.ac.id | https://ppg.univpgri-palembang.ac.id/2026/06/24/informasi-lapor-diri-ppg-guru-tertentu-tahap-ii-tahun-2026-universitas-pgri-palembang/ |
+| 44 | Universitas PGRI Palembang | 1 | https://ppg.univpgri-palembang.ac.id | https://ppg.univpgri-palembang.ac.id/2026/06/24/informasi-lapor-diri-ppg-guru-tertentu-tahap-ii-tahun-2026-universitas-pgri-palembang/ | https://chat.whatsapp.com/LQHJZ0gD6lNIzzZDHnHmBM, https://chat.whatsapp.com/Bojm6yuxoVE2PGRe6g0QCC |

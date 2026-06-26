@@ -526,6 +526,15 @@
         "jumlah_calon_peserta": 1,
         "website_lptk": "https://ppg.univpgri-palembang.ac.id",
         "link_lapor_diri": "https://ppg.univpgri-palembang.ac.id/2026/06/24/informasi-lapor-diri-ppg-guru-tertentu-tahap-ii-tahun-2026-universitas-pgri-palembang/",
-        "link_grup": []
+        "link_grup": [
+            {
+                "nama": "WhatsApp - BK",
+                "url": "https://chat.whatsapp.com/LQHJZ0gD6lNIzzZDHnHmBM"
+            },
+            {
+                "nama": "WhatsApp - PJOK",
+                "url": "https://chat.whatsapp.com/Bojm6yuxoVE2PGRe6g0QCC"
+            }
+        ]
     }
 ]

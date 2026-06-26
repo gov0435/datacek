@@ -4,7 +4,7 @@
         "nama_lptk": "Universitas Negeri Gorontalo",
         "jumlah_calon_peserta": 84,
         "website_lptk": "https://ppg.ung.ac.id",
-        "link_lapor_diri": "",
+        "link_lapor_diri": "https://ppg.ung.ac.id/lapor-diri",
         "link_grup": []
     },
     {
@@ -12,7 +12,7 @@
         "nama_lptk": "Universitas Negeri Makassar",
         "jumlah_calon_peserta": 29,
         "website_lptk": "https://siappg.unm.ac.id",
-        "link_lapor_diri": "",
+        "link_lapor_diri": "https://siappg.unm.ac.id",
         "link_grup": []
     },
     {
@@ -252,7 +252,7 @@
         "nama_lptk": "Universitas PGRI Semarang",
         "jumlah_calon_peserta": 3,
         "website_lptk": "https://ppg.upgris.ac.id",
-        "link_lapor_diri": "",
+        "link_lapor_diri": "https://ppg.upgris.ac.id",
         "link_grup": []
     },
     {
@@ -268,8 +268,29 @@
         "nama_lptk": "Universitas Bengkulu",
         "jumlah_calon_peserta": 2,
         "website_lptk": "https://ppg.fkip.unib.ac.id",
-        "link_lapor_diri": "",
-        "link_grup": []
+        "link_lapor_diri": "https://ppg.fkip.unib.ac.id/pengumuman-pemanggilan-mahasiswa-ppg-guru-tertentu-tahap-2-tahun-2026/",
+        "link_grup": [
+            {
+                "nama": "WhatsApp - Agribisnis Tanaman",
+                "url": "https://chat.whatsapp.com/KMBsqcGZ8KE2ivZuhWAhPE"
+            },
+            {
+                "nama": "WhatsApp - Bimbingan dan Konseling",
+                "url": "https://chat.whatsapp.com/LltREBA2Dlr29xPCtfZNa3"
+            },
+            {
+                "nama": "WhatsApp - PGPAUD",
+                "url": "https://chat.whatsapp.com/JqYYZG5O29e1da721t8cZE"
+            },
+            {
+                "nama": "WhatsApp - PGSD",
+                "url": "https://chat.whatsapp.com/FcZdZUbjezo8wDxb24SluF"
+            },
+            {
+                "nama": "WhatsApp - PJOK",
+                "url": "https://chat.whatsapp.com/BgjuxoDvDVz7h1jktogRP5"
+            }
+        ]
     },
     {
         "no": 25,

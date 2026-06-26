@@ -2,6 +2,8 @@
 
 Sumber data: `repos/py/peserta_berminat.json` (560 record) + `repos/py/verval_profil.json` (233 record).
 
+> **Update:** Data ini merupakan analisa historis. Untuk informasi terkini mengenai LPTK dan halaman lapor diri, lihat `database/data/lptk.json`.
+
 ## Ringkasan
 
 | Dataset | Jumlah | Keterangan |

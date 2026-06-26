@@ -3,7 +3,11 @@
 use App\Http\Controllers\Auth\SocialAuthController;
 use Illuminate\Support\Facades\Route;
 
+use App\Livewire\LptkPublic;
+
 Route::redirect('/', '/app')->name('home');
+
+Route::get('/lptk', LptkPublic::class)->name('lptk.public');
 
 Route::view('/no-auth', 'no-auth')->name('auth.no-access');
 

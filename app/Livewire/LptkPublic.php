@@ -4,12 +4,9 @@ namespace App\Livewire;
 
 use App\Helpers\LptkData;
 use Livewire\Component;
-use Livewire\WithUrl;
 
 class LptkPublic extends Component
 {
-    use WithUrl;
-
     public string $search = '';
 
     public function render()

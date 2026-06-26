@@ -15,7 +15,7 @@ class Lptk extends Page
 
     protected ?string $heading = 'LPTK PPG Guter Tahap 2';
 
-    protected ?string $subheading = 'Update: 26 Juni 2026 06:59';
+    protected ?string $subheading = 'Update: 26 Juni 2026 11:11';
 
     protected string $view = 'filament.pages.lptk';
 

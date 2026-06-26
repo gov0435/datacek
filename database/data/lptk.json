@@ -213,8 +213,9 @@
         "nama_lptk": "Universitas Muhammadiyah Palembang",
         "jumlah_calon_peserta": 3,
         "website_lptk": "http://fkip.um-palembang.ac.id/ppg",
-        "link_lapor_diri": "",
-        "link_grup": []
+        "link_lapor_diri": "https://fkip.um-palembang.ac.id/ppg/pelaksanaan-ppg-guru-tertentu-tahap-2-tahun-2026-universitas-muhammadiyah-palembang/",
+        "link_grup": [],
+        "catatan": "Link grup WA akan diarahkan setelah menyelesaikan lapor diri"
     },
     {
         "no": 20,
@@ -275,8 +276,13 @@
         "nama_lptk": "Universitas Mahasaraswati Denpasar",
         "jumlah_calon_peserta": 2,
         "website_lptk": "https://ppg.unmas.ac.id",
-        "link_lapor_diri": "",
-        "link_grup": []
+        "link_lapor_diri": "https://ppg.unmas.ac.id/media/berita/pengumuman-lapor-diri-mahasiswa-ppg-guru-tertentu-tahap-2-tahun-2026",
+        "link_grup": [
+            {
+                "nama": "WhatsApp",
+                "url": "https://chat.whatsapp.com/GIgvmnZfEDRDWL6AZXAz5B"
+            }
+        ]
     },
     {
         "no": 26,
@@ -344,7 +350,20 @@
         "jumlah_calon_peserta": 2,
         "website_lptk": "https://ppg.uniparjember.ac.id",
         "link_lapor_diri": "https://ppg.uniparjember.ac.id/lapor-diri.php",
-        "link_grup": []
+        "link_grup": [
+            {
+                "nama": "WhatsApp - Ekonomi",
+                "url": "https://chat.whatsapp.com/JuSOytTOCs26BWPosYS3YT"
+            },
+            {
+                "nama": "WhatsApp - PGPAUD",
+                "url": "https://chat.whatsapp.com/JN2CZOgciml7LCpe9mf94g"
+            },
+            {
+                "nama": "WhatsApp - PLB",
+                "url": "https://chat.whatsapp.com/IVW70uJOJsL8tpAD8xsSxN"
+            }
+        ]
     },
     {
         "no": 31,
@@ -463,7 +482,8 @@
         "jumlah_calon_peserta": 1,
         "website_lptk": "https://ppg.fkip.uika-bogor.ac.id",
         "link_lapor_diri": "https://ppg.fkip.uika-bogor.ac.id/lapor-diri-ppg-guru-tertentu-tahap-2-tahun-2026/",
-        "link_grup": []
+        "link_grup": [],
+        "catatan": "WA Admin 085718515673 (Randy Januar) atau 085239255299 (Rizky) untuk join grup"
     },
     {
         "no": 39,
@@ -497,7 +517,12 @@
         "jumlah_calon_peserta": 1,
         "website_lptk": "https://ppg.um-sorong.ac.id",
         "link_lapor_diri": "https://ppg.um-sorong.ac.id",
-        "link_grup": []
+        "link_grup": [
+            {
+                "nama": "Pusat Bantuan",
+                "url": "https://wa.me/6282239444346"
+            }
+        ]
     },
     {
         "no": 42,
@@ -518,7 +543,8 @@
         "jumlah_calon_peserta": 1,
         "website_lptk": "http://ppg.unipma.ac.id",
         "link_lapor_diri": "https://ppg.unipma.ac.id/pengumuman/1492/lapor-diri-peserta-ppg-guru-tertentu-tahap-2-tahun-2026-universitas-pgri-madiun",
-        "link_grup": []
+        "link_grup": [],
+        "catatan": "Grup WhatsApp akan muncul saat mengisi form lapor diri (1-4 Juli 2026) dan dikirim via email peserta yang terdaftar di SIMPKB"
     },
     {
         "no": 44,

@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
             <div>
                 <h1 class="text-xl font-bold text-gray-900">LPTK PPG Guru Tertentu Tahap 2</h1>
-                <p class="text-sm text-gray-500 mt-0.5">Update: 26 Juni 2026 11:11</p>
+                <p class="text-sm text-gray-500 mt-0.5">Update: 29 Juni 2026 06:58</p>
             </div>
         </div>
     </header>

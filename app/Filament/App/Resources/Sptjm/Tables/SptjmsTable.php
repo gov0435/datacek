@@ -15,6 +15,8 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -69,6 +71,10 @@ class SptjmsTable
                             ->success()
                             ->send();
                     }),
+                IconColumn::make('has_hardcopy')
+                    ->label('Hardcopy')
+                    ->boolean()
+                    ->sortable(),
                 TextColumn::make('unggahanValid.file_name')
                     ->label('File')
                     ->default('-')
@@ -110,10 +116,42 @@ class SptjmsTable
                             default => $query,
                         };
                     }),
+                SelectFilter::make('has_hardcopy')
+                    ->label('Status Hardcopy')
+                    ->options([
+                        '1' => 'Hardcopy Ada',
+                        '0' => 'Hardcopy Tidak Ada',
+                    ])
+                    ->query(function ($query, array $data) {
+                        $value = $data['value'] ?? null;
+
+                        if ($value === null || $value === '') {
+                            return $query;
+                        }
+
+                        return $query->where('has_hardcopy', filter_var($value, FILTER_VALIDATE_BOOLEAN));
+                    }),
             ])
             ->defaultSort('sekolah_nama')
             ->recordActions([
                 static::detailAction(),
+                Action::make('toggle_hardcopy')
+                    ->label('Hardcopy')
+                    ->icon(fn (SptjmSekolah $record): Heroicon => $record->has_hardcopy ? Heroicon::CheckCircle : Heroicon::XCircle)
+                    ->color('gray')
+                    ->tooltip(fn (SptjmSekolah $record): string => $record->has_hardcopy ? 'Tandai Hardcopy Belum Diterima' : 'Tandai Hardcopy Sudah Diterima')
+                    ->action(function (SptjmSekolah $record): void {
+                        $record->update(['has_hardcopy' => ! $record->has_hardcopy]);
+
+                        Notification::make()
+                            ->title($record->has_hardcopy
+                                ? "Hardcopy {$record->sekolah_nama} ditandai Ada"
+                                : "Hardcopy {$record->sekolah_nama} ditandai Tidak Ada"
+                            )
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn (): bool => in_array(Auth::user()?->role, ['admin', 'kgtk'], true)),
             ])
             ->toolbarActions([]);
     }
@@ -260,6 +298,12 @@ class SptjmsTable
                         'catatan' => $data['catatan'] ?? null,
                         'uploaded_by' => Auth::id(),
                     ]);
+
+                    if (Auth::user()?->isKgtk()) {
+                        $record->update(['has_hardcopy' => true]);
+                    } else {
+                        $record->update(['has_hardcopy' => false]);
+                    }
                 });
 
                 Notification::make()

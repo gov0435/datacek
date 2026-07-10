@@ -11,6 +11,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -54,6 +55,10 @@ class SptjmSekolahsTable
                         'Pending' => 'warning',
                         default => 'gray',
                     }),
+                IconColumn::make('has_hardcopy')
+                    ->label('Hardcopy')
+                    ->boolean()
+                    ->sortable(),
                 TextColumn::make('unggahanValid.file_name')
                     ->label('File')
                     ->default('-')
@@ -127,9 +132,25 @@ class SptjmSekolahsTable
                             default => $query,
                         };
                     }),
+                SelectFilter::make('has_hardcopy')
+                    ->label('Status Hardcopy')
+                    ->options([
+                        '1' => 'Hardcopy Ada',
+                        '0' => 'Hardcopy Tidak Ada',
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        $value = $data['value'] ?? null;
+
+                        if ($value === null || $value === '') {
+                            return $query;
+                        }
+
+                        return $query->where('has_hardcopy', filter_var($value, FILTER_VALIDATE_BOOLEAN));
+                    }),
             ])
             ->defaultSort('sekolah_npsn')
             ->recordActions([
+                static::toggleHardcopyAction(),
                 static::deleteAction(),
             ])
             ->toolbarActions([]);
@@ -251,6 +272,25 @@ class SptjmSekolahsTable
 
                 Notification::make()
                     ->title('Semua dokumen SPTJM berhasil dihapus')
+                    ->success()
+                    ->send();
+            });
+    }
+
+    private static function toggleHardcopyAction(): Action
+    {
+        return Action::make('toggle_hardcopy')
+            ->icon(fn (SptjmSekolah $record): Heroicon => $record->has_hardcopy ? Heroicon::XCircle : Heroicon::CheckCircle)
+            ->color('gray')
+            ->tooltip(fn (SptjmSekolah $record): string => $record->has_hardcopy ? 'Tandai Hardcopy Belum Diterima' : 'Tandai Hardcopy Sudah Diterima')
+            ->action(function (SptjmSekolah $record): void {
+                $record->update(['has_hardcopy' => ! $record->has_hardcopy]);
+
+                Notification::make()
+                    ->title($record->has_hardcopy
+                        ? "Hardcopy {$record->sekolah_nama} ditandai Ada"
+                        : "Hardcopy {$record->sekolah_nama} ditandai Tidak Ada"
+                    )
                     ->success()
                     ->send();
             });

@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
@@ -53,6 +55,7 @@ beforeEach(function () {
         $table->string('scope')->nullable();
         $table->integer('jumlah_guru')->default(0);
         $table->boolean('is_valid')->default(false);
+        $table->boolean('has_hardcopy')->default(false);
         $table->unsignedBigInteger('generated_by')->nullable();
         $table->timestamps();
     });
@@ -299,4 +302,83 @@ test('sptjm sekolah relation latest upload and validation toggle', function () {
 
     expect($sekolah->is_valid)->toBeTrue()
         ->and($sekolah->unggahanValid->id)->toBe($unggahan2->id);
+});
+
+test('sptjm sekolah has_hardcopy model config', function () {
+    $model = new SptjmSekolah;
+
+    expect($model->getFillable())->toContain('has_hardcopy')
+        ->and($model->getCasts()['has_hardcopy'])->toBe('boolean');
+});
+
+test('sptjm upload by kgtk sets has_hardcopy to true', function () {
+    $user = User::factory()->create([
+        'email' => 'kgtk@example.com',
+        'role' => 'kgtk',
+    ]);
+
+    $sekolah = SptjmSekolah::create([
+        'sekolah_npsn' => '12345678',
+        'sekolah_nama' => 'SD Negeri 1',
+        'sekolah_jenjang' => 'SD',
+        'sekolah_kota' => 'Kab. Boalemo',
+        'is_valid' => false,
+        'has_hardcopy' => false,
+    ]);
+
+    $this->actingAs($user);
+
+    DB::transaction(function () use ($sekolah, $user): void {
+        $sekolah->unggahan()->create([
+            'disk' => 's3',
+            'file_path' => 'ppg/sptjm/file.pdf',
+            'file_name' => 'file.pdf',
+            'uploaded_by' => $user->id,
+        ]);
+
+        if (Auth::user()?->isKgtk()) {
+            $sekolah->update(['has_hardcopy' => true]);
+        } else {
+            $sekolah->update(['has_hardcopy' => false]);
+        }
+    });
+
+    $sekolah->refresh();
+    expect($sekolah->has_hardcopy)->toBeTrue();
+});
+
+test('sptjm upload by member sets has_hardcopy to false', function () {
+    $user = User::factory()->create([
+        'email' => 'member@example.com',
+        'role' => 'member',
+    ]);
+
+    $sekolah = SptjmSekolah::create([
+        'sekolah_npsn' => '12345678',
+        'sekolah_nama' => 'SD Negeri 1',
+        'sekolah_jenjang' => 'SD',
+        'sekolah_kota' => 'Kab. Boalemo',
+        'is_valid' => false,
+        'has_hardcopy' => true,
+    ]);
+
+    $this->actingAs($user);
+
+    DB::transaction(function () use ($sekolah, $user): void {
+        $sekolah->unggahan()->create([
+            'disk' => 's3',
+            'file_path' => 'ppg/sptjm/file.pdf',
+            'file_name' => 'file.pdf',
+            'uploaded_by' => $user->id,
+        ]);
+
+        if (Auth::user()?->isKgtk()) {
+            $sekolah->update(['has_hardcopy' => true]);
+        } else {
+            $sekolah->update(['has_hardcopy' => false]);
+        }
+    });
+
+    $sekolah->refresh();
+    expect($sekolah->has_hardcopy)->toBeFalse();
 });

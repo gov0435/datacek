@@ -21,12 +21,14 @@ class SptjmSekolah extends Model
         'jumlah_guru',
         'generated_by',
         'is_valid',
+        'has_hardcopy',
     ];
 
     protected function casts(): array
     {
         return [
             'is_valid' => 'boolean',
+            'has_hardcopy' => 'boolean',
         ];
     }
 

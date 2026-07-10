@@ -23,6 +23,7 @@ CREATE TABLE sptjm_sekolah (
     scope VARCHAR(50),                          -- 'kabkota' atau 'provinsi'
     jumlah_guru INTEGER DEFAULT 0,             -- snapshot jumlah guru non-Berminat saat generate
     is_valid BOOLEAN DEFAULT FALSE,            -- penanda validasi fisik oleh KGTK
+    has_hardcopy BOOLEAN DEFAULT FALSE,        -- penanda keberadaan hardcopy oleh Admin
     generated_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP

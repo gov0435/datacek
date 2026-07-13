@@ -48,10 +48,11 @@ class SptjmResource extends Resource
         }
 
         if (str_contains(strtolower($kabKota), 'provinsi')) {
-            return $query->whereIn('sekolah_jenjang', ['SLB', 'SMA', 'SMK']);
+            return $query->where('scope', 'provinsi');
         }
 
-        return $query->where('sekolah_kota', $kabKota);
+        return $query->where('scope', 'kabkota')
+            ->where('sekolah_kota', $kabKota);
     }
 
     public static function canViewAny(): bool

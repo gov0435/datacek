@@ -28,10 +28,11 @@ class SptjmProgressChart extends ChartWidget
             $jenjangs = [];
         } elseif (str_contains(strtolower($kabKota), 'provinsi')) {
             $jenjangs = ['SLB', 'SMA', 'SMK'];
-            $query->whereIn('sekolah_jenjang', $jenjangs);
+            $query->where('scope', 'provinsi');
         } else {
             $jenjangs = ['PAUD', 'SD', 'SMP', 'Lainnya'];
-            $query->where('sekolah_kota', $kabKota);
+            $query->where('scope', 'kabkota')
+                ->where('sekolah_kota', $kabKota);
         }
 
         $valid = [];

@@ -410,6 +410,7 @@ test('sptjm stats widget calculates and displays correct counts including has_ha
         'sekolah_kota' => 'Kab. Boalemo',
         'is_valid' => false,
         'has_hardcopy' => false,
+        'scope' => 'kabkota',
     ]);
 
     $sekolah2 = SptjmSekolah::create([
@@ -419,6 +420,7 @@ test('sptjm stats widget calculates and displays correct counts including has_ha
         'sekolah_kota' => 'Kab. Boalemo',
         'is_valid' => true,
         'has_hardcopy' => true,
+        'scope' => 'kabkota',
     ]);
 
     $sekolah3 = SptjmSekolah::create([
@@ -428,6 +430,7 @@ test('sptjm stats widget calculates and displays correct counts including has_ha
         'sekolah_kota' => 'Kab. Boalemo',
         'is_valid' => false,
         'has_hardcopy' => true,
+        'scope' => 'kabkota',
     ]);
 
     // Add unggahan for sekolah3 to make it "Proses Validasi"
@@ -446,6 +449,7 @@ test('sptjm stats widget calculates and displays correct counts including has_ha
         'sekolah_kota' => 'Kota Gorontalo',
         'is_valid' => true,
         'has_hardcopy' => true,
+        'scope' => 'kabkota',
     ]);
 
     $widget = app(SptjmStatsWidget::class);
@@ -508,6 +512,7 @@ test('sptjm progress chart calculates and displays correct datasets and labels i
         'sekolah_kota' => 'Kab. Boalemo',
         'is_valid' => false,
         'has_hardcopy' => false,
+        'scope' => 'kabkota',
     ]);
 
     $sekolah2 = SptjmSekolah::create([
@@ -517,6 +522,7 @@ test('sptjm progress chart calculates and displays correct datasets and labels i
         'sekolah_kota' => 'Kab. Boalemo',
         'is_valid' => true,
         'has_hardcopy' => true,
+        'scope' => 'kabkota',
     ]);
 
     $sekolah3 = SptjmSekolah::create([
@@ -526,6 +532,7 @@ test('sptjm progress chart calculates and displays correct datasets and labels i
         'sekolah_kota' => 'Kab. Boalemo',
         'is_valid' => false,
         'has_hardcopy' => true,
+        'scope' => 'kabkota',
     ]);
 
     // Add unggahan for sekolah3 to make it "Proses Validasi"
@@ -544,6 +551,7 @@ test('sptjm progress chart calculates and displays correct datasets and labels i
         'sekolah_kota' => 'Kota Gorontalo',
         'is_valid' => true,
         'has_hardcopy' => true,
+        'scope' => 'kabkota',
     ]);
 
     $widget = app(SptjmProgressChart::class);

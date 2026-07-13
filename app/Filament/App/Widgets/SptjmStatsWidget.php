@@ -19,13 +19,22 @@ class SptjmStatsWidget extends BaseWidget
 
         $total = (clone $query)->count();
 
+        $belumUpload = (clone $query)
+            ->where('is_valid', false)
+            ->whereDoesntHave('unggahan')
+            ->count();
+
+        $prosesValidasi = (clone $query)
+            ->where('is_valid', false)
+            ->whereHas('unggahan')
+            ->count();
+
         $valid = (clone $query)
             ->where('is_valid', true)
             ->count();
 
-        $belumUpload = (clone $query)
-            ->where('is_valid', false)
-            ->whereDoesntHave('unggahan')
+        $hardcopyDiterima = (clone $query)
+            ->where('has_hardcopy', true)
             ->count();
 
         return [
@@ -39,9 +48,19 @@ class SptjmStatsWidget extends BaseWidget
                 ->descriptionIcon('heroicon-m-clock')
                 ->color('warning'),
 
+            Stat::make('Proses Validasi', $prosesValidasi)
+                ->description('Menunggu verifikasi')
+                ->descriptionIcon('heroicon-m-arrow-path')
+                ->color('warning'),
+
             Stat::make('Valid', $valid)
                 ->description('Dokumen SPTJM tervalidasi')
                 ->descriptionIcon('heroicon-m-check-circle')
+                ->color('success'),
+
+            Stat::make('Hardcopy Diterima', $hardcopyDiterima)
+                ->description('Fisik SPTJM diterima')
+                ->descriptionIcon('heroicon-m-document-check')
                 ->color('success'),
         ];
     }

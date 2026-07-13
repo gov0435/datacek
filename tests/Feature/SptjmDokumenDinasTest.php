@@ -3,6 +3,8 @@
 use App\Enums\JenisDokumenDinas;
 use App\Filament\App\Resources\DokumenDinas\DokumenDinasResource;
 use App\Filament\App\Resources\Sptjm\SptjmResource;
+use App\Filament\App\Widgets\SptjmProgressChart;
+use App\Filament\App\Widgets\SptjmStatsWidget;
 use App\Filament\Resources\SptjmSekolahs\SptjmSekolahResource;
 use App\Helpers\FileHelper;
 use App\Models\DokumenDinas;
@@ -381,4 +383,188 @@ test('sptjm upload by member sets has_hardcopy to false', function () {
 
     $sekolah->refresh();
     expect($sekolah->has_hardcopy)->toBeFalse();
+});
+
+test('sptjm stats widget calculates and displays correct counts including has_hardcopy', function () {
+    $user = User::factory()->create([
+        'email' => 'member@example.com',
+        'role' => 'member',
+    ]);
+
+    Whitelist::create([
+        'email' => 'member@example.com',
+        'nama' => 'Member User',
+        'instansi' => 'Dinas Pendidikan Boalemo',
+        'kabkota' => 'Kab. Boalemo',
+        'role' => 'member',
+    ]);
+
+    $this->actingAs($user);
+
+    // Create some schools in Boalemo (scoped to member's whitelist)
+    $sekolah1 = SptjmSekolah::create([
+        'sekolah_npsn' => '11111111',
+        'sekolah_nama' => 'SD Negeri 1 Boalemo',
+        'sekolah_jenjang' => 'SD',
+        'sekolah_kota' => 'Kab. Boalemo',
+        'is_valid' => false,
+        'has_hardcopy' => false,
+    ]);
+
+    $sekolah2 = SptjmSekolah::create([
+        'sekolah_npsn' => '22222222',
+        'sekolah_nama' => 'SD Negeri 2 Boalemo',
+        'sekolah_jenjang' => 'SD',
+        'sekolah_kota' => 'Kab. Boalemo',
+        'is_valid' => true,
+        'has_hardcopy' => true,
+    ]);
+
+    $sekolah3 = SptjmSekolah::create([
+        'sekolah_npsn' => '33333333',
+        'sekolah_nama' => 'SD Negeri 3 Boalemo',
+        'sekolah_jenjang' => 'SD',
+        'sekolah_kota' => 'Kab. Boalemo',
+        'is_valid' => false,
+        'has_hardcopy' => true,
+    ]);
+
+    // Add unggahan for sekolah3 to make it "Proses Validasi"
+    $sekolah3->unggahan()->create([
+        'disk' => 's3',
+        'file_path' => 'ppg/sptjm/file3.pdf',
+        'file_name' => 'file3.pdf',
+        'uploaded_by' => $user->id,
+    ]);
+
+    // Create a school outside Kab. Boalemo (should not be in scoped stats)
+    SptjmSekolah::create([
+        'sekolah_npsn' => '44444444',
+        'sekolah_nama' => 'SD Negeri 4 Gorontalo',
+        'sekolah_jenjang' => 'SD',
+        'sekolah_kota' => 'Kota Gorontalo',
+        'is_valid' => true,
+        'has_hardcopy' => true,
+    ]);
+
+    $widget = app(SptjmStatsWidget::class);
+
+    $method = new ReflectionMethod($widget, 'getStats');
+    $method->setAccessible(true);
+    $stats = $method->invoke($widget);
+
+    // Total: 3 (sekolah1, sekolah2, sekolah3 in Boalemo)
+    // Belum Upload: 1 (sekolah1 - is_valid false, has no unggahan)
+    // Proses Validasi: 1 (sekolah3 - is_valid false, has unggahan)
+    // Valid: 1 (sekolah2 - is_valid true)
+    // Hardcopy Diterima: 2 (sekolah2, sekolah3 - has_hardcopy true)
+
+    expect($stats)->toHaveCount(5);
+
+    $totalStat = $stats[0];
+    expect($totalStat->getLabel())->toBe('Total SPTJM')
+        ->and($totalStat->getValue())->toBe(3);
+
+    $belumUploadStat = $stats[1];
+    expect($belumUploadStat->getLabel())->toBe('Belum Upload')
+        ->and($belumUploadStat->getValue())->toBe(1);
+
+    $prosesValidasiStat = $stats[2];
+    expect($prosesValidasiStat->getLabel())->toBe('Proses Validasi')
+        ->and($prosesValidasiStat->getValue())->toBe(1);
+
+    $validStat = $stats[3];
+    expect($validStat->getLabel())->toBe('Valid')
+        ->and($validStat->getValue())->toBe(1);
+
+    $hardcopyStat = $stats[4];
+    expect($hardcopyStat->getLabel())->toBe('Hardcopy Diterima')
+        ->and($hardcopyStat->getValue())->toBe(2);
+});
+
+test('sptjm progress chart calculates and displays correct datasets and labels including has_hardcopy', function () {
+    $user = User::factory()->create([
+        'email' => 'member2@example.com',
+        'role' => 'member',
+    ]);
+
+    Whitelist::create([
+        'email' => 'member2@example.com',
+        'nama' => 'Member User 2',
+        'instansi' => 'Dinas Pendidikan Boalemo',
+        'kabkota' => 'Kab. Boalemo',
+        'role' => 'member',
+    ]);
+
+    $this->actingAs($user);
+
+    // Create some schools in Boalemo (scoped to member's whitelist)
+    // We will place them in PAUD and SD jenjang to see if the counts match
+    $sekolah1 = SptjmSekolah::create([
+        'sekolah_npsn' => '11111115',
+        'sekolah_nama' => 'SD Negeri 1 Boalemo',
+        'sekolah_jenjang' => 'SD',
+        'sekolah_kota' => 'Kab. Boalemo',
+        'is_valid' => false,
+        'has_hardcopy' => false,
+    ]);
+
+    $sekolah2 = SptjmSekolah::create([
+        'sekolah_npsn' => '22222225',
+        'sekolah_nama' => 'SD Negeri 2 Boalemo',
+        'sekolah_jenjang' => 'SD',
+        'sekolah_kota' => 'Kab. Boalemo',
+        'is_valid' => true,
+        'has_hardcopy' => true,
+    ]);
+
+    $sekolah3 = SptjmSekolah::create([
+        'sekolah_npsn' => '33333335',
+        'sekolah_nama' => 'PAUD Pembina Boalemo',
+        'sekolah_jenjang' => 'PAUD',
+        'sekolah_kota' => 'Kab. Boalemo',
+        'is_valid' => false,
+        'has_hardcopy' => true,
+    ]);
+
+    // Add unggahan for sekolah3 to make it "Proses Validasi"
+    $sekolah3->unggahan()->create([
+        'disk' => 's3',
+        'file_path' => 'ppg/sptjm/file3.pdf',
+        'file_name' => 'file3.pdf',
+        'uploaded_by' => $user->id,
+    ]);
+
+    // Create a school outside Kab. Boalemo (should not be in scoped stats)
+    SptjmSekolah::create([
+        'sekolah_npsn' => '44444445',
+        'sekolah_nama' => 'SD Negeri 4 Gorontalo',
+        'sekolah_jenjang' => 'SD',
+        'sekolah_kota' => 'Kota Gorontalo',
+        'is_valid' => true,
+        'has_hardcopy' => true,
+    ]);
+
+    $widget = app(SptjmProgressChart::class);
+
+    $method = new ReflectionMethod($widget, 'getData');
+    $method->setAccessible(true);
+    $data = $method->invoke($widget);
+
+    // PAUD, SD, SMP, Lainnya
+    expect($data['labels'])->toBe(['PAUD', 'SD', 'SMP', 'Lainnya']);
+    expect($data['datasets'])->toHaveCount(5);
+
+    // Datasets format:
+    // [0] Valid (PAUD: 0, SD: 1, SMP: 0, Lainnya: 0)
+    // [1] Proses Validasi (PAUD: 1, SD: 0, SMP: 0, Lainnya: 0)
+    // [2] Belum Diupload (PAUD: 0, SD: 1, SMP: 0, Lainnya: 0)
+    // [3] Hardcopy Diterima (PAUD: 1, SD: 1, SMP: 0, Lainnya: 0)
+    // [4] Hardcopy Belum Diterima (PAUD: 0, SD: 1, SMP: 0, Lainnya: 0)
+
+    expect($data['datasets'][0]['data'])->toBe([0, 1, 0, 0]) // Valid
+        ->and($data['datasets'][1]['data'])->toBe([1, 0, 0, 0]) // Proses Validasi
+        ->and($data['datasets'][2]['data'])->toBe([0, 1, 0, 0]) // Belum Diupload
+        ->and($data['datasets'][3]['data'])->toBe([1, 1, 0, 0]) // Hardcopy Diterima
+        ->and($data['datasets'][4]['data'])->toBe([0, 1, 0, 0]); // Hardcopy Belum Diterima
 });

@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\App\Widgets\InfoInstansi;
 use App\Filament\App\Widgets\JadwalPPGWidget;
 use App\Filament\App\Widgets\RegistrationStatsWidget;
+use App\Filament\App\Widgets\SptjmProgressChart;
 use App\Filament\Pages\Auth\AppLogin;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
@@ -47,7 +48,8 @@ class AppPanelProvider extends PanelProvider
             ->spa()
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\Filament\App\Widgets')
             ->widgets([
-                RegistrationStatsWidget::class,
+                // RegistrationStatsWidget::class,
+                SptjmProgressChart::class,
                 JadwalPPGWidget::class,
                 InfoInstansi::class,
                 AccountWidget::class,

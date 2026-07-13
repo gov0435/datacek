@@ -29,6 +29,8 @@ class SptjmProgressByRegionChart extends ChartWidget
         $belumUpload = [];
         $pending = [];
         $valid = [];
+        $hardcopyDiterima = [];
+        $hardcopyBelum = [];
 
         foreach ($regions as $region) {
             $query = SptjmSekolah::query();
@@ -45,9 +47,14 @@ class SptjmProgressByRegionChart extends ChartWidget
             $hasUpload = (clone $query)->where('is_valid', false)->whereHas('unggahan')->count();
             $belumCount = $total - $validCount - $hasUpload;
 
+            $hcDiterimaCount = (clone $query)->where('has_hardcopy', true)->count();
+            $hcBelumCount = $total - $hcDiterimaCount;
+
             $belumUpload[] = $belumCount;
             $pending[] = $hasUpload;
             $valid[] = $validCount;
+            $hardcopyDiterima[] = $hcDiterimaCount;
+            $hardcopyBelum[] = $hcBelumCount;
         }
 
         $labels = array_map(fn (string $region, int $i) => $region.' ('.($belumUpload[$i] + $pending[$i] + $valid[$i]).')', $regions, array_keys($regions));
@@ -58,6 +65,7 @@ class SptjmProgressByRegionChart extends ChartWidget
                 [
                     'label' => 'Valid',
                     'data' => $valid,
+                    'stack' => 'dokumen',
                     'backgroundColor' => '#10B981',
                     'borderColor' => '#10B981',
                     'borderWidth' => 1,
@@ -65,6 +73,7 @@ class SptjmProgressByRegionChart extends ChartWidget
                 [
                     'label' => 'Pending',
                     'data' => $pending,
+                    'stack' => 'dokumen',
                     'backgroundColor' => '#F59E0B',
                     'borderColor' => '#F59E0B',
                     'borderWidth' => 1,
@@ -72,8 +81,25 @@ class SptjmProgressByRegionChart extends ChartWidget
                 [
                     'label' => 'Belum Diupload',
                     'data' => $belumUpload,
+                    'stack' => 'dokumen',
                     'backgroundColor' => '#9CA3AF',
                     'borderColor' => '#9CA3AF',
+                    'borderWidth' => 1,
+                ],
+                [
+                    'label' => 'Hardcopy Diterima',
+                    'data' => $hardcopyDiterima,
+                    'stack' => 'hardcopy',
+                    'backgroundColor' => '#3B82F6',
+                    'borderColor' => '#3B82F6',
+                    'borderWidth' => 1,
+                ],
+                [
+                    'label' => 'Hardcopy Belum Diterima',
+                    'data' => $hardcopyBelum,
+                    'stack' => 'hardcopy',
+                    'backgroundColor' => '#EF4444',
+                    'borderColor' => '#EF4444',
                     'borderWidth' => 1,
                 ],
             ],

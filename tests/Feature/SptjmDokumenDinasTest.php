@@ -6,6 +6,7 @@ use App\Filament\App\Resources\Sptjm\SptjmResource;
 use App\Filament\App\Widgets\SptjmProgressChart;
 use App\Filament\App\Widgets\SptjmStatsWidget;
 use App\Filament\Resources\SptjmSekolahs\SptjmSekolahResource;
+use App\Filament\Widgets\SptjmProgressByRegionChart;
 use App\Helpers\FileHelper;
 use App\Models\DokumenDinas;
 use App\Models\SptjmSekolah;
@@ -567,4 +568,46 @@ test('sptjm progress chart calculates and displays correct datasets and labels i
         ->and($data['datasets'][2]['data'])->toBe([0, 1, 0, 0]) // Belum Diupload
         ->and($data['datasets'][3]['data'])->toBe([1, 1, 0, 0]) // Hardcopy Diterima
         ->and($data['datasets'][4]['data'])->toBe([0, 1, 0, 0]); // Hardcopy Belum Diterima
+});
+
+test('admin sptjm progress by region chart calculates and displays correct datasets and labels including has_hardcopy', function () {
+    // Create schools in different regions
+    SptjmSekolah::create([
+        'sekolah_npsn' => '99999111',
+        'sekolah_nama' => 'SD Boalemo',
+        'sekolah_jenjang' => 'SD',
+        'sekolah_kota' => 'Kab. Boalemo',
+        'is_valid' => true,
+        'has_hardcopy' => true,
+        'scope' => 'kabkota',
+    ]);
+
+    SptjmSekolah::create([
+        'sekolah_npsn' => '99999222',
+        'sekolah_nama' => 'SD Bonebolango',
+        'sekolah_jenjang' => 'SD',
+        'sekolah_kota' => 'Kab. Bonebolango',
+        'is_valid' => false,
+        'has_hardcopy' => false,
+        'scope' => 'kabkota',
+    ]);
+
+    $widget = app(SptjmProgressByRegionChart::class);
+
+    $method = new ReflectionMethod($widget, 'getData');
+    $method->setAccessible(true);
+    $data = $method->invoke($widget);
+
+    // Regions are:
+    // Kab. Boalemo, Kab. Bonebolango, Kab. Gorontalo, Kab. Gorontalo Utara, Kab. Pohuwato, Kota Gorontalo, Provinsi
+    expect($data['labels'])->toHaveCount(7);
+    expect($data['datasets'])->toHaveCount(5);
+
+    // Let's check Kab. Boalemo (index 0) and Kab. Bonebolango (index 1)
+    // Valid for Boalemo should be 1
+    expect($data['datasets'][0]['data'][0])->toBe(1) // Valid for Boalemo
+        ->and($data['datasets'][0]['data'][1])->toBe(0) // Valid for Bonebolango
+        ->and($data['datasets'][3]['data'][0])->toBe(1) // Hardcopy Diterima for Boalemo
+        ->and($data['datasets'][3]['data'][1])->toBe(0) // Hardcopy Diterima for Bonebolango
+        ->and($data['datasets'][4]['data'][1])->toBe(1); // Hardcopy Belum Diterima for Bonebolango (1 school total - 0 hardcopy)
 });

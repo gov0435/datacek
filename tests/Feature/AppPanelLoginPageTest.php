@@ -5,7 +5,7 @@ test('app panel login page only shows google login action', function () {
 
     $response->assertSuccessful();
     $response->assertSee('Login dengan Google');
-    $response->assertSee(route('auth.social.redirect', ['provider' => 'google']), false);
+    $response->assertSee("mountAction('googleLogin'", false);
     $response->assertDontSee('wire:model="data.email"', false);
     $response->assertDontSee('wire:model="data.password"', false);
 });

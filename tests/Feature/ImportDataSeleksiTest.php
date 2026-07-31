@@ -91,23 +91,24 @@ it('updates only specific columns for existing records', function () {
         'nama' => 'Original Name',
         'status_sekolah' => 'Original Status',
         'status_ajuan' => 'Belum Ajukan',
-        'layak_daftar' => 'Tidak',
+        'layak_daftar' => 'Tidak Layak Daftar',
         'keberminatan_status' => 'Belum Isi',
         'status_daftar' => 'Belum Daftar',
     ]);
 
-    createTestCsv("Ptk ID,Nama,Status Sekolah,Status Ajuan,Layak Daftar,Keberminatan Status,Status Daftar\n1002,New Name,New Status,Sudah Ajukan,Ya,Sudah Isi,Sudah Daftar\n");
+    createTestCsv("Ptk ID,Nama,Status Sekolah,Status Ajuan,Layak Daftar,Keberminatan Status,Status Daftar\n1002,New Name,New Status,Sudah Ajukan,Layak Daftar,Sudah Isi,Sudah Daftar\n");
 
     $this->artisan('app:import-data-seleksi')->assertSuccessful();
 
     $record = PotensiPpg::firstWhere('ptk_id', 1002);
 
     expect($record->status_ajuan)->toBe('Sudah Ajukan')
-        ->and($record->layak_daftar)->toBe('Ya')
+        ->and($record->layak_daftar->value)->toBe('Layak Daftar')
         ->and($record->keberminatan_status)->toBe('Sudah Isi')
         ->and($record->status_daftar->value)->toBe('Sudah Daftar')
         ->and($record->nama)->toBe('Original Name')
         ->and($record->status_sekolah)->toBe('Original Status');
+
 });
 
 it('skips rows without ptk_id', function () {

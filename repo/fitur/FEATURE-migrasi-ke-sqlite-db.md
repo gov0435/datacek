@@ -17,7 +17,7 @@
 Saat ini aplikasi terkonfigurasi menggunakan database cloud Neon PostgreSQL (`DB_CONNECTION=pgsql`). Untuk mempercepat latensi query lokal, mendukung mode offline, dan membebaskan ketergantungan dari koneksi internet ke cloud, aplikasi perlu dialihkan agar membaca dan menulis langsung ke file database SQLite yang tersimpan di `db/neon_data.sqlite`.
 
 ### Proposed Solution
-Mengubah konfigurasi `.env` (serta menyesuaikan `config/database.php` jika diperlukan) sehingga `DB_CONNECTION=sqlite` dan `DB_DATABASE=C:\laragonx\www\ppg26\db\neon_data.sqlite` (atau `database_path('../db/neon_data.sqlite')`). Memastikan seluruh Eloquent Model, Filament Panel, Session Store, Cache, dan Service berjalan lancar di atas database SQLite.
+Mengubah konfigurasi `.env` sehingga `DB_CONNECTION=sqlite` dan `DB_DATABASE=db/neon_data.sqlite` (di mana `config/database.php` menginterpretasikan path relatif tersebut menggunakan `base_path($dbPath)`). Memastikan seluruh Eloquent Model, Filament Panel, Session Store, Cache, dan Service berjalan lancar di atas database SQLite.
 
 ---
 
@@ -36,7 +36,7 @@ Mengubah konfigurasi `.env` (serta menyesuaikan `config/database.php` jika diper
 
 **Happy Path:**
 ```
-[Update Konfigurasi .env] → [Clear Cache Config/Route/App] → [Aplikasi Terhubung ke SQLite /db/neon_data.sqlite] → [Uji Coba Read/Write Data & Login Socialite/Whitelist] → [Sistem Berjalan Penuh secara Offline/Lokal]
+[Update Konfigurasi .env DB_DATABASE=db/neon_data.sqlite] → [Clear Cache Config/Route/App] → [Aplikasi Terhubung ke SQLite /db/neon_data.sqlite] → [Uji Coba Read/Write Data & Login Socialite/Whitelist] → [Sistem Berjalan Penuh secara Offline/Lokal]
 ```
 
 **Edge Cases:**
@@ -50,7 +50,7 @@ Mengubah konfigurasi `.env` (serta menyesuaikan `config/database.php` jika diper
 
 ### Must Have (MVP)
 - [ ] Mengubah `DB_CONNECTION` pada `.env` menjadi `sqlite`.
-- [ ] Mengatur path database pada `.env` atau `config/database.php` mengarah ke `db/neon_data.sqlite`.
+- [ ] Mengatur `DB_DATABASE=db/neon_data.sqlite` pada `.env` dan menyesuaikan `config/database.php` agar mendukung path relatif `base_path()`.
 - [ ] Memastikan `php artisan config:clear` dan `php artisan test` berjalan tanpa kendala di driver SQLite.
 - [ ] Memastikan fitur autentikasi whitelist (`whitelists`) dan login user (`users`) berfungsi di SQLite.
 
@@ -89,16 +89,28 @@ Mengubah konfigurasi `.env` (serta menyesuaikan `config/database.php` jika diper
 ### Implementation Impact
 | Layer | Perubahan | Lokasi/Komponen |
 |-------|-----------|-----------------|
-| Environment | Ubah `DB_CONNECTION` & `DB_DATABASE` | `.env` |
-| Configuration | Sesuaikan path default SQLite jika menggunakan relatif | `config/database.php` |
+| Environment | Ubah `DB_CONNECTION=sqlite` & `DB_DATABASE=db/neon_data.sqlite` | `.env` |
+| Configuration | Sesuaikan resolver path `database` untuk SQLite agar mendukung relatif `base_path()` | `config/database.php` |
 | Verification | Pengujian fitur & rute aplikasi | Pest Feature Tests & Artisan Command |
 
 ### Backend — Laravel
 - **Konfigurasi `.env`:**
   ```env
   DB_CONNECTION=sqlite
-  DB_DATABASE="${APP_BASE_PATH}/db/neon_data.sqlite"
-  # atau path relatif ke base_path('db/neon_data.sqlite')
+  DB_DATABASE=db/neon_data.sqlite
+  ```
+- **Penyesuaian `config/database.php`:**
+  ```php
+  'sqlite' => [
+      'driver' => 'sqlite',
+      'url' => env('DB_URL'),
+      'database' => env('DB_DATABASE') 
+          ? (str_starts_with(env('DB_DATABASE'), '/') || str_contains(env('DB_DATABASE'), ':') 
+              ? env('DB_DATABASE') 
+              : base_path(env('DB_DATABASE')))
+          : database_path('database.sqlite'),
+      ...
+  ]
   ```
 - **Clear Cache:** `php artisan config:clear`
 
@@ -115,16 +127,17 @@ Mengubah konfigurasi `.env` (serta menyesuaikan `config/database.php` jika diper
 ## 8. Acceptance Criteria
 
 Fitur dinyatakan selesai jika:
-- [ ] Konfigurasi `.env` berhasil diubah ke `DB_CONNECTION=sqlite` mengarah ke `db/neon_data.sqlite`.
-- [ ] `php artisan migrate:status` atau `php artisan db:show` mengindikasikan koneksi aktif adalah SQLite di `/db/neon_data.sqlite`.
+- [ ] Konfigurasi `.env` berhasil diubah ke `DB_CONNECTION=sqlite` dan `DB_DATABASE=db/neon_data.sqlite`.
+- [ ] `php artisan db:show` mengindikasikan koneksi aktif adalah SQLite di `db/neon_data.sqlite`.
 - [ ] Aplikasi (Filament Admin, Auth, API Lookup) berjalan lancar tanpa error koneksi PostgreSQL.
 - [ ] Seluruh test suite (`php artisan test`) lulus 100%.
 
 ---
 
-## 9. Open Questions
+## 9. Open Questions (Resolved)
 
-- [ ] Apakah path database di `.env` sebaiknya menggunakan path absolut (seperti `C:\laragonx\www\ppg26\db\neon_data.sqlite`) atau relatif via `config/database.php`? *(Rekomendasi: sesuaikan `config/database.php` agar secara default membaca `base_path('db/neon_data.sqlite')` jika ada).*
+- [x] **Path Database & Environment Config:** Menggunakan path relatif `DB_DATABASE=db/neon_data.sqlite` pada file `.env`. Konfigurasi `config/database.php` dikustomisasi agar secara otomatis meng-resolve path relatif menggunakan `base_path()` Laravel.
+
 
 ---
 

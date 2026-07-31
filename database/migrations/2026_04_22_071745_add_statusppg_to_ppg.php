@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('ppg')) {
+            return;
+        }
+
         Schema::table('ppg', function (Blueprint $table) {
             $table->string('statusppg')->nullable();
         });
@@ -21,6 +25,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (! Schema::hasTable('ppg')) {
+            return;
+        }
+
         Schema::table('ppg', function (Blueprint $table) {
             $table->dropColumn('statusppg');
         });

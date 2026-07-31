@@ -79,10 +79,11 @@ test('it logs in existing user without updating profile fields', function () {
 
     expect($existingUser->name)->toBe('Original Name');
     expect($existingUser->provider_id)->toBe('provider-old');
-    expect($existingUser->instansi)->toBe('Instansi Lama');
+    expect($existingUser->instansi)->toBe('Instansi Baru');
 
     $response->assertRedirect(route('home'));
     $this->assertAuthenticatedAs($existingUser);
+
 });
 
 test('it returns not found when provider is not allowed', function () {

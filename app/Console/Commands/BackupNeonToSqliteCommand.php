@@ -136,19 +136,14 @@ class BackupNeonToSqliteCommand extends Command
                     }
                 });
 
-                // Fetch rows in chunks and insert into SQLite
+                // Fetch rows using cursor and insert into SQLite with parameter-safe batch size
                 $totalRows = 0;
-                $orderColumn = ! empty($columns) ? $columns[0]['name'] : null;
+                $colCount = count($columns);
+                $batchSize = max(1, (int) floor(900 / max(1, $colCount)));
+                $batch = [];
 
-                $query = DB::connection($fromConnection)->table($sourceTable);
-                if ($orderColumn !== null) {
-                    $query->orderBy($orderColumn);
-                }
-
-                $query->chunk(500, function ($rows) use ($sqliteTable, &$totalRows): void {
-                    $insertData = [];
-
-                    foreach ($rows as $row) {
+                DB::connection('sqlite_backup')->transaction(function () use ($fromConnection, $sourceTable, $sqliteTable, $batchSize, &$totalRows, &$batch): void {
+                    foreach (DB::connection($fromConnection)->table($sourceTable)->cursor() as $row) {
                         $rowArray = (array) $row;
                         $cleanedRow = [];
 
@@ -162,12 +157,18 @@ class BackupNeonToSqliteCommand extends Command
                             }
                         }
 
-                        $insertData[] = $cleanedRow;
+                        $batch[] = $cleanedRow;
+                        $totalRows++;
+
+                        if (count($batch) >= $batchSize) {
+                            DB::connection('sqlite_backup')->table($sqliteTable)->insert($batch);
+                            $batch = [];
+                        }
                     }
 
-                    if ($insertData !== []) {
-                        DB::connection('sqlite_backup')->table($sqliteTable)->insert($insertData);
-                        $totalRows += count($insertData);
+                    if ($batch !== []) {
+                        DB::connection('sqlite_backup')->table($sqliteTable)->insert($batch);
+                        $batch = [];
                     }
                 });
 

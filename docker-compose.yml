@@ -83,6 +83,7 @@ services:
     volumes:
       - storage-data:/var/www/html/storage/app
       - logs-data:/var/www/html/storage/logs
+      - db-data:/var/www/html/db
     networks:
       - coolify
     healthcheck:
@@ -106,3 +107,4 @@ networks:
 volumes:
   storage-data:
   logs-data:
+  db-data:

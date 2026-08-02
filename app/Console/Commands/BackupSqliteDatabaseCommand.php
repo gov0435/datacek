@@ -80,7 +80,7 @@ class BackupSqliteDatabaseCommand extends Command
         $localGzPath = "{$tempDir}/{$tempBase}.sqlite.gz";
         $localJsonPath = "{$tempDir}/{$tempBase}.json";
 
-        $remoteDir = 'backup/kawal-ppg/'.$now->format('Y-m-d');
+        $remoteDir = 'backups/kawal-ppg/'.$now->format('Y-m-d');
         $fileBasename = $now->format('His').'-database';
         $s3GzPath = "{$remoteDir}/{$fileBasename}.sqlite.gz";
         $s3JsonPath = "{$remoteDir}/{$fileBasename}.json";

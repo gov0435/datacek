@@ -29,8 +29,8 @@ it('creates hot snapshot vacuum into, compresses with gzip, and uploads sqlite b
     $this->artisan('db:backup-sqlite --disk=s3')
         ->assertExitCode(0);
 
-    // Verify S3 files in backup/kawal-ppg
-    $files = Storage::disk('s3')->allFiles('backup/kawal-ppg');
+    // Verify S3 files in backups/kawal-ppg
+    $files = Storage::disk('s3')->allFiles('backups/kawal-ppg');
     expect($files)->not->toBeEmpty();
 
     $gzFiles = array_filter($files, fn (string $f): bool => str_ends_with($f, '.sqlite.gz'));
@@ -42,9 +42,9 @@ it('creates hot snapshot vacuum into, compresses with gzip, and uploads sqlite b
     $gzPath = array_values($gzFiles)[0];
     $jsonPath = array_values($jsonFiles)[0];
 
-    // Verify path structure: backup/kawal-ppg/YYYY-MM-DD/HHMMSS-database.sqlite.gz
+    // Verify path structure: backups/kawal-ppg/YYYY-MM-DD/HHMMSS-database.sqlite.gz
     $todayStr = now()->format('Y-m-d');
-    expect($gzPath)->toContain("backup/kawal-ppg/{$todayStr}/");
+    expect($gzPath)->toContain("backups/kawal-ppg/{$todayStr}/");
     expect($gzPath)->toEndWith('-database.sqlite.gz');
     expect($jsonPath)->toEndWith('-database.json');
 

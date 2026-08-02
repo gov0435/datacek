@@ -42,7 +42,7 @@ Mengimplementasikan Artisan Command `php artisan db:backup-sqlite` yang mengekse
    → [Integrity Check: PRAGMA integrity_check == 'ok'] 
    → [Gzip Compression: Compress snapshot ke database-TIMESTAMP-HASH.sqlite.gz] 
    → [Calculate Checksum SHA-256 & Generate Manifest JSON Sidecar] 
-   → [Streaming Upload .sqlite.gz & .json ke S3: backup/kawal-ppg/YYYY-MM-DD/HHMMSS-database.sqlite.gz] 
+   → [Streaming Upload .sqlite.gz & .json ke S3: backups/kawal-ppg/YYYY-MM-DD/HHMMSS-database.sqlite.gz] 
    → [Verification: Cek keberadaan & ukuran file di S3] 
    → [Safety Cleanup: Hapus snapshot & manifest temporer lokal] 
    → [Complete: Log Info & Exit Code 0]
